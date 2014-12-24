@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		5431CC571A2766E1009C8017 /* RanGenConv */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RanGenConv; sourceTree = BUILT_PRODUCTS_DIR; };
 		5431CC5A1A2766E1009C8017 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		5431CC611A2CE989009C8017 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +58,7 @@
 		5431CC591A2766E1009C8017 /* RanGenConv */ = {
 			isa = PBXGroup;
 			children = (
+				5431CC611A2CE989009C8017 /* sample.txt */,
 				5431CC5A1A2766E1009C8017 /* main.cpp */,
 			);
 			path = RanGenConv;
