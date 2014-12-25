@@ -235,9 +235,10 @@ inline bool writable_file (const std::string& name) {
     }
 }
 
-bool generate_output(const char *ifilename, const char *ofilename, const bool dummynodes = false) {
+bool generate_output(const bool verbose, const char *ifilename, const char *ofilename, const bool dummynodes = false) {
     
     
+    if(verbose)cout<<">>> get input >>>"<<endl;
     
     rangen_file *file = parserg_file(ifilename);
     
@@ -245,6 +246,8 @@ bool generate_output(const char *ifilename, const char *ofilename, const bool du
         cout<<"error while parsing "<<ifilename<<endl;
         return false;
     }
+    
+    if(verbose)cout<<"parsed input file..."<<endl<<"<<< write output <<<"<<endl;
     
     int activity_count = dummynodes ? file->num_nodes : file->num_nodes - 2;
     
@@ -299,15 +302,21 @@ bool generate_output(const char *ifilename, const char *ofilename, const bool du
     for(int i = 1; i < maxtime; i++)ofs<<i<<",";
     ofs<<maxtime<<"};"<<endl;
     
+    if(verbose)cout<<"time written..."<<endl;
+    
     // activity
     ofs<<"activity = {";
     for(int i = 1; i < activity_count; i++)ofs<<i<<",";
     ofs<<activity_count<<"};"<<endl;
     
+    if(verbose)cout<<"activity written..."<<endl;
+    
     // resource
     ofs<<"resource = {";
     for(int i = 1; i < file->num_resources; i++)ofs<<i<<",";
     ofs<<file->num_resources<<"};"<<endl;
+    
+    if(verbose)cout<<"resource written..."<<endl;
     
     // (overall) resource capacity (constant)
     ofs<<"res_capacity = [";
@@ -329,6 +338,7 @@ bool generate_output(const char *ifilename, const char *ofilename, const bool du
     }
     ofs<<file->resource_availability[file->num_resources - 1]<<"]];"<<endl;
     
+    if(verbose)cout<<"res_capacity written..."<<endl;
     
     // max progress
     // max progress is 1.0 / activity duration. Can be also something arbitrarily
@@ -341,11 +351,15 @@ bool generate_output(const char *ifilename, const char *ofilename, const bool du
         }
     ofs<<"];"<<endl;
     
+    if(verbose)cout<<"maxProgress written..."<<endl;
+    
     // min progress
     float min_progress = 0.0; // constant
     ofs<<"minProgress  = [";
     for(int i = 1; i < activity_count; i++)ofs<<min_progress<<",";
     ofs<<min_progress<<"];"<<endl;
+    
+    if(verbose)cout<<"minProgress written..."<<endl;
     
     // print relations
     ofs<<"Relations  = {";
@@ -380,6 +394,8 @@ bool generate_output(const char *ifilename, const char *ofilename, const bool du
     }
     ofs<<"};"<<endl;
     
+    if(verbose)cout<<"Relations written..."<<endl;
+    
     // release
     ofs<<"release  = [";
     if(!file->data_lines.empty())
@@ -389,6 +405,8 @@ bool generate_output(const char *ifilename, const char *ofilename, const bool du
         }
     ofs<<"];"<<endl;
     
+    if(verbose)cout<<"release written..."<<endl;
+    
     // deadline
     ofs<<"deadline  = [";
     if(!file->data_lines.empty())
@@ -397,6 +415,8 @@ bool generate_output(const char *ifilename, const char *ofilename, const bool du
             if(it != file->data_lines.end() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
+    
+    if(verbose)cout<<"deadline written..."<<endl;
     
     // res_demand
     ofs<<"res_demand = [";
@@ -415,6 +435,8 @@ bool generate_output(const char *ifilename, const char *ofilename, const bool du
     }
     ofs<<"];"<<endl;
     
+    if(verbose)cout<<"res_demand written..."<<endl;
+    if(verbose)cout<<"file successfully converted!"<<endl;
     return true;
 }
 
@@ -538,7 +560,7 @@ int main(int argc, char * argv[]) {
         }
         
         // now perform output
-        if(ifile && ofile)generate_output(ifile, ofile, dummynodes);
+        if(ifile && ofile)generate_output(verbose, ifile, ofile, dummynodes);
     }
     
     if(mode & MODE_CHECK) {
