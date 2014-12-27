@@ -28,8 +28,8 @@ public:
     vector<int> resource_requirements;
     int num_successors;
     vector<int> successor_ids;
-    double release;
-    double deadline;
+    int release;
+    int deadline;
     
     data_line() : activity_duration(0), num_successors(0), release(0.0), deadline(0.0) {
         
@@ -179,10 +179,13 @@ double exprv(const double rate) {
     return -1.0 * log(1.0 - drandom(0.0, 1.0)) / rate;
 }
 
+// return geometric distributed random variable
+int georv(const double rate) {
+    return (int)floor(log(drandom(0.0, 1.0)) / log(1.0 - rate));
+}
+
 // here release & deadlines are generated for the vector v
-void generate_times(vector<data_line>& v, data_line& l, double mintime) {
-    
-    double eps = 0.001; // add / sub this to avoid that rounding will ruin everything
+void generate_times(vector<data_line>& v, data_line& l, int mintime) {
     
     // end?
     if(l.num_successors == 0) {
@@ -196,10 +199,20 @@ void generate_times(vector<data_line>& v, data_line& l, double mintime) {
         // here now alter the times to give some random element
         
         // algorithm here is to simple use exponentially distributed times with rate = 1.0 / activity duration
-        l.release -= exprv(1.0 / l.activity_duration) - eps;
-        l.deadline += exprv(1.0 / l.activity_duration)+ eps;
+        //l.release -= exprv(1.0 / l.activity_duration) - eps;
+        //l.deadline += exprv(1.0 / l.activity_duration)+ eps;
         
-        l.release = max(0.0, l.release); // clamp to 0
+        // for dummy nodes special treatment
+        if(abs(l.activity_duration) < 0.00001) {
+            l.release -= 0;
+            l.deadline += 0;
+        }
+        else {
+            l.release -= georv(1.0 / l.activity_duration);
+            l.deadline += georv(1.0 / l.activity_duration);
+        }
+        
+        l.release = max(0, l.release); // clamp to 0
         
         assert(l.deadline - l.release >= l.activity_duration);
         
@@ -272,20 +285,20 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     // deadline, release >= 0
     srand((unsigned int)time(NULL));
     if(!file->data_lines.empty())
-        generate_times(file->data_lines, file->data_lines[0], 0.0);
+        generate_times(file->data_lines, file->data_lines[0], 0);
     
     
     // now get maxtime
      // set maxtime to ceil of latest deadline
-    double dmaxtime = 0.0;
+    int imaxtime = 0.0;
     if(!file->data_lines.empty())
         for(vector<data_line>::const_iterator it = file->data_lines.begin();
             it != file->data_lines.end(); it++)
         {
             // dmaxtime += it->deadline - it->release; // adding differences
-            dmaxtime = ::max(dmaxtime, it->deadline);
+            imaxtime = ::max(imaxtime, it->deadline);
         }
-    maxtime = (int)ceil(dmaxtime);
+    maxtime = imaxtime;
     
     
     
