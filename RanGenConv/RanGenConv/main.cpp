@@ -106,6 +106,9 @@ rangen_file* parserg_file(const char *filename) {
     }
         for (string line; getline(ifs, line); )
         {
+            // go over empty lines
+            if(line.length() < 2)continue;
+            
             //cout << line << endl;
             if(!dline.resource_requirements.empty())dline.resource_requirements.clear();
             if(!dline.successor_ids.empty())dline.successor_ids.clear();

@@ -26,6 +26,7 @@
 		5431CC571A2766E1009C8017 /* RanGenConv */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RanGenConv; sourceTree = BUILT_PRODUCTS_DIR; };
 		5431CC5A1A2766E1009C8017 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		5431CC611A2CE989009C8017 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample.txt; sourceTree = "<group>"; };
+		545BC05C1A4F69D2008A548F /* test.rcp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.rcp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +59,7 @@
 		5431CC591A2766E1009C8017 /* RanGenConv */ = {
 			isa = PBXGroup;
 			children = (
+				545BC05C1A4F69D2008A548F /* test.rcp */,
 				5431CC611A2CE989009C8017 /* sample.txt */,
 				5431CC5A1A2766E1009C8017 /* main.cpp */,
 			);
@@ -234,6 +236,7 @@
 				5431CC601A2766E1009C8017 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
