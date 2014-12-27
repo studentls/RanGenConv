@@ -6,20 +6,21 @@
 //  Copyright (c) 2014 Leonhard Spiegelberg. All rights reserved.
 //
 
-template<typename T> T max(const T& a, const T& b) {
-	return a > b ? a : b;
-}
-
-
 #include <iostream>
 #include <cassert>
 #include <vector>
 
 // inc for easy commandline parsing
 #ifdef WIN32
+
 #undef _UNICODE
 #undef UNICODE
 #include "getopt_win.h"
+
+template<typename T> T max(const T& a, const T& b) {
+    return a > b ? a : b;
+}
+
 #else
 #include <getopt.h>
 #endif
