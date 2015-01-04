@@ -59,7 +59,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-v /Users/leonhardspiegelberg/Documents/projects/RanGenConv/RanGenConv/RanGenConv/sample.txt /Users/leonhardspiegelberg/Documents/projects/RanGenConv/RanGenConv/RanGenConv/sample.dat"
+            argument = "-v -g -d /Users/leonhardspiegelberg/Documents/projects/RanGenConv/RanGenConv/RanGenConv/sample.txt /Users/leonhardspiegelberg/Documents/projects/RanGenConv/RanGenConv/RanGenConv/sample.dat"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

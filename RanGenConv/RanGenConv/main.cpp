@@ -31,6 +31,8 @@ template<typename T> T max(const T& a, const T& b) {
 #include <ctime>
 #include <cmath>
 
+#include <cstring>
+
 // make life easier
 using namespace std;
 
@@ -61,12 +63,13 @@ struct rangen_file {
 string program_name;
 
 // program short options
-const char * const short_options = "hc:vd";
+const char * const short_options = "hc:vgd";
 // the programs options
 const struct option long_options[] = {
     {"help", 0, NULL, 'h'},
     {"check-input", 1, NULL, 'c'},
     {"verbose", 0, NULL, 'v'},
+    {"graphml", 0, NULL, 'g'},
     {"dummy", 0, NULL, 'd'},
     {NULL, 0, NULL, 0}
 };
@@ -85,6 +88,7 @@ void print_usage(FILE * stream, int exit_code) {
             "   -h --help                   display help message\n"
             "   -c --check-input filename   check if a given input file obeys the RanGen format\n"
             "   -v --verbose                perform in verbose mode\n"
+            "   -g --graphml                output additionally GraphML file\n"
             "   -d --dummy                  output dummy nodes at start and end");
     exit(exit_code);
 }
@@ -264,7 +268,98 @@ inline bool writable_file (const std::string& name) {
     }
 }
 
-bool generate_output(const bool verbose, const char *ifilename, const char *ofilename, const bool dummynodes = false) {
+bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilename, const bool dummynodes = false) {
+    
+    int offset = dummynodes ? 0 : 1;
+    
+    if(verbose)cout<<"writing GraphML file..."<<endl;
+    // open output stream
+    ofstream ofs(ofilename);
+    
+    if(ofs.bad() || ofs.fail()) {
+        cout<<"error: output file could not been opened"<<endl;
+        exit(1);
+    }
+    
+    //print header
+    ofs<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl<<
+    "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"" \
+    "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" \
+    "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns" \
+    "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">"<<endl;
+    
+    //sep line
+    ofs<<endl;
+    
+    // print attribute definition (for activity duration, release, deadline, window[deadline - release])
+    // actually, window is redundant info, but included for convenience reasons...
+    ofs<<"<key id=\"d0\" for=\"node\" attr.name=\"activity_duration\" attr.type=\"int\">"<<endl;
+    ofs<<"<default>0</default>"<<endl;
+    ofs<<"</key>"<<endl;
+    ofs<<"<key id=\"d1\" for=\"node\" attr.name=\"release\" attr.type=\"int\">"<<endl;
+    ofs<<"<default>0</default>"<<endl;
+    ofs<<"</key>"<<endl;
+    ofs<<"<key id=\"d2\" for=\"node\" attr.name=\"deadline\" attr.type=\"int\">"<<endl;
+    ofs<<"<default>0</default>"<<endl;
+    ofs<<"</key>"<<endl;
+    ofs<<"<key id=\"d3\" for=\"node\" attr.name=\"window\" attr.type=\"int\">"<<endl;
+    ofs<<"<default>0</default>"<<endl;
+    ofs<<"</key>"<<endl;
+    
+    //begin with graph
+    ofs<<"<graph id=\"G\" edgedefault=\"undirected\">"<<endl;
+    
+    // first, print nodes
+    if(!file->data_lines.empty()) {
+        int nid = offset;
+        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+            ofs<<"<node id=\"n"<<nid<<"\">"<<endl;
+            ofs<<"<data key=\"d0\">"<<it->activity_duration<<"</data>"<<endl; //d0 = activity duration
+            ofs<<"<data key=\"d1\">"<<it->release<<"</data>"<<endl; //d1 = release
+            ofs<<"<data key=\"d2\">"<<it->deadline<<"</data>"<<endl; //d2 = deadline
+            ofs<<"<data key=\"d3\">"<<(it->deadline - it->release)<<"</data>"<<endl; //d3 = window
+            ofs<<"</node>"<<endl;
+            nid++;
+        }
+    }
+    
+    if(verbose)cout<<"nodes written..."<<endl;
+    
+    //sep line
+    ofs<<endl;
+    
+    // progress with edges
+    if(!file->data_lines.empty()) {
+        int eid = offset;
+        int nid = offset;
+        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+            
+            if(!it->successor_ids.empty())
+                for(vector<int>::const_iterator jt = it->successor_ids.begin(); jt != it->successor_ids.end(); ++jt) {
+                    if(!dummynodes && (*jt == 0 || *jt == file->num_nodes))
+                        continue; //dummynodes disabled, skip them!
+                    ofs<<"<edge id=\"e"<<eid<<"\" source=\"n"<<(nid)<<"\" target=\"n"<<(*jt)-1<<"\" />"<<endl;
+                    eid++;
+                }
+            nid++;
+        }
+    }
+    
+    if(verbose)cout<<"edges written..."<<endl;
+    
+    //sep line
+    ofs<<endl;
+    
+    //print footer
+    ofs<<"</graph>"<<endl<<"</graphml>"<<endl;
+    
+    if(verbose)cout<<"GraphML file successfully written!"<<endl;
+    
+    return true;
+}
+
+
+bool generate_output(const bool verbose, const char *ifilename, const char *ofilename, const bool dummynodes = false, const bool graphml = false) {
     
     
     if(verbose)cout<<">>> get input >>>"<<endl;
@@ -466,6 +561,13 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     if(verbose)cout<<"res_demand written..."<<endl;
     if(verbose)cout<<"file successfully converted!"<<endl;
+    
+    // write graphml file if desired...
+    if(graphml) {
+        string gmlfilename = string(ofilename) + ".graphml";
+       generate_graphml(verbose, file, gmlfilename.c_str(), dummynodes);
+    }
+    
     return true;
 }
 
@@ -509,6 +611,7 @@ int main(int argc, char * argv[]) {
     
     bool verbose = false;       // indicate if program is in verbose mode or not
     bool dummynodes = false;    // indicate if dummynodes shall be added to output
+    bool graphml = false;       // indicate if additional graphml file should be generated
     
     program_name = argv[0];     // program name is stored as first argument
     int mode = 0;
@@ -541,6 +644,11 @@ int main(int argc, char * argv[]) {
                 
                 case 'd':
                 dummynodes = true;
+                options_used++;
+                break;
+                
+                case 'g':
+                graphml = true;
                 options_used++;
                 break;
                 
@@ -589,7 +697,7 @@ int main(int argc, char * argv[]) {
         }
         
         // now perform output
-        if(ifile && ofile)generate_output(verbose, ifile, ofile, dummynodes);
+        if(ifile && ofile)generate_output(verbose, ifile, ofile, dummynodes, graphml);
     }
     
     if(mode & MODE_CHECK) {
