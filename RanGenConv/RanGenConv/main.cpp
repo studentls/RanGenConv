@@ -46,7 +46,7 @@ public:
     int release;
     int deadline;
     
-    data_line() : activity_duration(0), num_successors(0), release(0.0), deadline(0.0) {
+    data_line() : activity_duration(0), num_successors(0), release(0), deadline(0) {
         
     }
 };
@@ -284,12 +284,9 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     //print header
     ofs<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl<<
     "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"" \
-    "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" \
-    "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns" \
+    " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" \
+    " xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns" \
     "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">"<<endl;
-    
-    //sep line
-    ofs<<endl;
     
     // print attribute definition (for activity duration, release, deadline, window[deadline - release])
     // actually, window is redundant info, but included for convenience reasons...
@@ -307,8 +304,8 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     ofs<<"</key>"<<endl;
     
     // after 4 initial data keys, include also resource demands of each node
-    for(int i = 1; i <= file->resource_availability.size(); ++i) {
-        int index = i + 3;
+    for(unsigned int i = 1; i <= file->resource_availability.size(); ++i) {
+        unsigned int index = i + 3;
         ofs<<"<key id=\"d"<<index<<"\" for=\"node\" attr.name=\"res"<<i<<"_demand\" attr.type=\"int\">"<<endl;
         ofs<<"<default>0</default>"<<endl;
         ofs<<"</key>"<<endl;
@@ -342,9 +339,6 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     
     if(verbose)cout<<"nodes written..."<<endl;
     
-    //sep line
-    ofs<<endl;
-    
     // progress with edges
     if(!file->data_lines.empty()) {
         int eid = offset;
@@ -363,9 +357,6 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     }
     
     if(verbose)cout<<"edges written..."<<endl;
-    
-    //sep line
-    ofs<<endl;
     
     //print footer
     ofs<<"</graph>"<<endl<<"</graphml>"<<endl;
@@ -418,7 +409,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // now get maxtime
      // set maxtime to ceil of latest deadline
-    int imaxtime = 0.0;
+    int imaxtime = 0;
     if(!file->data_lines.empty())
         for(vector<data_line>::const_iterator it = file->data_lines.begin();
             it != file->data_lines.end(); it++)
@@ -465,7 +456,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
         
         // print resource availability (is here constant) at time t
         ofs<<"[";
-        for(int j = 0; j < file->resource_availability.size() - 1; j++) {
+        for(unsigned int j = 0; j < file->resource_availability.size() - 1; j++) {
             ofs<<file->resource_availability[j]<<",";
         }
         ofs<<file->resource_availability[file->num_resources - 1]<<"]";
@@ -474,7 +465,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
         ofs<<",";
     }
     ofs<<"[";
-    for(int j = 0; j < file->resource_availability.size() - 1; j++) {
+    for(unsigned int j = 0; j < file->resource_availability.size() - 1; j++) {
         ofs<<file->resource_availability[j]<<",";
     }
     ofs<<file->resource_availability[file->num_resources - 1]<<"]];"<<endl;
