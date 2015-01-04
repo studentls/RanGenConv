@@ -312,7 +312,7 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     }
     
     //begin with graph
-    ofs<<"<graph id=\"G\" edgedefault=\"undirected\">"<<endl;
+    ofs<<"<graph id=\"G\" edgedefault=\"directed\">"<<endl;
     
     // first, print nodes
     if(!file->data_lines.empty()) {
