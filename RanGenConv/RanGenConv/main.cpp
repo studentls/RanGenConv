@@ -306,6 +306,14 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     ofs<<"<default>0</default>"<<endl;
     ofs<<"</key>"<<endl;
     
+    // after 4 initial data keys, include also resource demands of each node
+    for(int i = 1; i <= file->resource_availability.size(); ++i) {
+        int index = i + 3;
+        ofs<<"<key id=\"d"<<index<<"\" for=\"node\" attr.name=\"res"<<i<<"_demand\" attr.type=\"int\">"<<endl;
+        ofs<<"<default>0</default>"<<endl;
+        ofs<<"</key>"<<endl;
+    }
+    
     //begin with graph
     ofs<<"<graph id=\"G\" edgedefault=\"undirected\">"<<endl;
     
@@ -318,6 +326,15 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
             ofs<<"<data key=\"d1\">"<<it->release<<"</data>"<<endl; //d1 = release
             ofs<<"<data key=\"d2\">"<<it->deadline<<"</data>"<<endl; //d2 = deadline
             ofs<<"<data key=\"d3\">"<<(it->deadline - it->release)<<"</data>"<<endl; //d3 = window
+            
+            // res_demands
+            if(!it->resource_requirements.empty()) {
+                int index = 4;
+                for(vector<int>::const_iterator jt = it->resource_requirements.begin(); jt != it->resource_requirements.end(); ++jt) {
+                    ofs<<"<data key=\"d"<<index<<"\">"<<*jt<<"</data>"<<endl;
+                    index++;
+                }
+            }
             ofs<<"</node>"<<endl;
             nid++;
         }
