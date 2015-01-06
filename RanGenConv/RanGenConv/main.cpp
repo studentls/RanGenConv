@@ -63,7 +63,7 @@ struct rangen_file {
 string program_name;
 
 // program short options
-const char * const short_options = "hc:vgd";
+const char * const short_options = "hc:vgdt:";
 // the programs options
 const struct option long_options[] = {
     {"help", 0, NULL, 'h'},
@@ -71,6 +71,7 @@ const struct option long_options[] = {
     {"verbose", 0, NULL, 'v'},
     {"graphml", 0, NULL, 'g'},
     {"dummy", 0, NULL, 'd'},
+	{ "timedomain", 1, NULL, 't' },
     {NULL, 0, NULL, 0}
 };
 
@@ -89,7 +90,8 @@ void print_usage(FILE * stream, int exit_code) {
             "   -c --check-input filename   check if a given input file obeys the RanGen format\n"
             "   -v --verbose                perform in verbose mode\n"
             "   -g --graphml                output additionally GraphML file\n"
-            "   -d --dummy                  output dummy nodes at start and end");
+            "   -d --dummy                  output dummy nodes at start and end\n"
+			"   -t --timedomain  value      force time domain to value");
     exit(exit_code);
 }
 
@@ -367,7 +369,7 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
 }
 
 
-bool generate_output(const bool verbose, const char *ifilename, const char *ofilename, const bool dummynodes = false, const bool graphml = false) {
+bool generate_output(const bool verbose, const char *ifilename, const char *ofilename, const int time_domain, const bool dummynodes = false, const bool graphml = false) {
     
     
     if(verbose)cout<<">>> get input >>>"<<endl;
@@ -417,7 +419,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
             // dmaxtime += it->deadline - it->release; // adding differences
             imaxtime = ::max(imaxtime, it->deadline);
         }
-    maxtime = imaxtime;
+    maxtime = ::max(time_domain, imaxtime); // yield value to forced value if it makes sense
     
     
     
@@ -627,6 +629,7 @@ int main(int argc, char * argv[]) {
     char *ifile = NULL;
     char *ofile = NULL;
     
+	int time_domain = -1; // value of -1 indicates nothing forced...
     int options_used = 1; // one for program name
     int next_option = 0;
     do  {
@@ -660,6 +663,11 @@ int main(int argc, char * argv[]) {
                 options_used++;
                 break;
                 
+				case 't':
+				time_domain = atoi(optarg); // use better c++11 for string conversion in a later deployment
+				options_used += 2;
+				break;
+
                 case '?':
                 // user specified invalid options, terminate with exit code 1
                 print_usage(stderr, 1);
@@ -705,7 +713,7 @@ int main(int argc, char * argv[]) {
         }
         
         // now perform output
-        if(ifile && ofile)generate_output(verbose, ifile, ofile, dummynodes, graphml);
+        if(ifile && ofile)generate_output(verbose, ifile, ofile, time_domain, dummynodes, graphml);
     }
     
     if(mode & MODE_CHECK) {
