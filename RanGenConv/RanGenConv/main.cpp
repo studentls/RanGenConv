@@ -84,13 +84,14 @@ const struct option long_options[] = {
 // print usage function including detailed help for all opts
 void print_usage(FILE * stream, int exit_code) {
     
-    fprintf(stream, "usage: %s options [intputfile] [outputfile]", program_name.substr(program_name.rfind(PATH_SEPARATOR) + 1).c_str());
+    fprintf(stream,"created %s %s\n\n" \
+            "usage: %s options [intputfile] [outputfile]\n\n", __DATE__, __TIME__, program_name.substr(program_name.rfind(PATH_SEPARATOR) + 1).c_str());
     fprintf(stream,
-            "   -h --help                   display help message\n"
-            "   -c --check-input filename   check if a given input file obeys the RanGen format\n"
-            "   -v --verbose                perform in verbose mode\n"
-            "   -g --graphml                output additionally GraphML file\n"
-            "   -d --dummy                  output dummy nodes at start and end");
+            "       -h --help                   display help message\n"
+            "       -c --check-input filename   check if a given input file obeys the RanGen format\n"
+            "       -v --verbose                perform in verbose mode\n"
+            "       -g --graphml                output additionally GraphML file\n"
+            "       -d --dummy                  output dummy nodes at start and end");
     exit(exit_code);
 }
 
