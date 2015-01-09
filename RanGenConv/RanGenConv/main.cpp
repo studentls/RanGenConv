@@ -511,7 +511,8 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
                 if(!dummynodes) {
                     if(*jt != file->num_nodes)  { // print only if not last node
                         ofs<<"<"<<curid<<","<<(*jt) - 1<<">";
-                        if(curid != activity_count - 1)ofs<<",";
+                        if(curid != activity_count - 1
+                           && (it)->successor_ids[0] != activity_count - 1)ofs<<",";
                     }
                     
                     
