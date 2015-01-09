@@ -506,7 +506,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     ofs<<"maxProgress  = [";
     if(!file->data_lines.empty())
         for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
-            ofs<<(1.0 / it->activity_duration); // change here for other max progress...
+            ofs<<(1.0 / it->activity_duration + 0.000001); // change here for other max progress...
             if(it != file->data_lines.end() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
