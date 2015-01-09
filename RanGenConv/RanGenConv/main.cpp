@@ -39,6 +39,7 @@ using namespace std;
 // struct to hold one data line of the patterson format
 class data_line {
 public:
+    int id; // min, max are the dummynodes
     int activity_duration;
     vector<int> resource_requirements;
     int num_successors;
@@ -46,7 +47,7 @@ public:
     int release;
     int deadline;
     
-    data_line() : activity_duration(0), num_successors(0), release(0), deadline(0) {
+    data_line() : activity_duration(0), num_successors(0), release(0), deadline(0), id(-1) {
         
     }
 };
@@ -105,6 +106,8 @@ rangen_file* parserg_file(const char *filename) {
     int line_number = 0;
         ifs.open(filename);
     
+    int id = 1; // give lines ids
+    
     if(ifs.fail() || ifs.bad()) {
         cout<<"error: "<<"file could not been opened successfully"<<endl;
         if(file)delete file;
@@ -156,6 +159,8 @@ rangen_file* parserg_file(const char *filename) {
                     ss >> successor;
                     dline.successor_ids.push_back(successor);
                 }
+                dline.id = id++; //
+                
                 file->data_lines.push_back(dline);
             }
             
@@ -207,42 +212,65 @@ int georv(const double rate) {
 }
 
 // here release & deadlines are generated for the vector v
-void generate_times(vector<data_line>& v, data_line& l, int mintime) {
+// v holds the data array
+// l is the current node for which things shall be generated
+// rest is data of predecessor
+void generate_times(vector<data_line>& v, data_line& l, const int pred_release, const int pred_deadline, const int pred_duration) {
     
-    // end?
-    if(l.num_successors == 0) {
+    // for the generation three constraints have to be fulfilled
+    
+    // (1) deadline(node) - release(node) >= duration(node)
+    // (2) release(succ) - release(pred) >= duration(pred)
+    // (3) deadline(succ) - deadline(pred) >= duration(succ)
+    
+    // Algorithm:
+    // step 1:  Choose X, Z >= 0 s.t.
+    //          X+Z >= deadline(pred) - release(pred) - duration(pred)
+    // step 2:  Set Y as
+    //          Y = X + Z - (deadline(pred) - release(pred) - duration(pred))
+    // step 3:  Calculate times by
+    //          release(succ)  = release(pred)  + duration(pred) + X
+    //          deadline(succ) = deadline(pred) + duration(succ) + Y
+    // Note that: pred with all set to 0 trivially fulfills (1) - (3) ==> start with trivial solution at first place!
+    
+    int X = 0, Z = 0;
+    int maxallowed = 4000;
+    int cnt = 0;
+    
+    int window = pred_deadline - pred_release - pred_duration; // makewindow
+    
+    // generate matching values but limit to meaningful max time
+    do {
         
-    }
-    else {
-        // generate time for leaf
-        l.release += mintime;
-        l.deadline = l.release + l.activity_duration;
+        X = georv(1.0 / (double)l.activity_duration); // this can be arbitrary...
+        Z = georv(1.0 / (double)(pred_duration + l.activity_duration)); // this can be arbitrary...
         
-        // here now alter the times to give some random element
+        // special case dummy nodes
+        if(l.activity_duration == 0)X = 0;
+        if(pred_duration == 0)Z = 0;
         
-        // algorithm here is to simple use exponentially distributed times with rate = 1.0 / activity duration
-        //l.release -= exprv(1.0 / l.activity_duration) - eps;
-        //l.deadline += exprv(1.0 / l.activity_duration)+ eps;
-        
-        // for dummy nodes special treatment
-        if(abs(l.activity_duration) < 0.00001) {
-            l.release -= 0;
-            l.deadline += 0;
+        cnt++;
+    } while(X + Z < window && cnt < maxallowed);
+    
+    int Y = X + Z - window;
+    
+    // correct if maxallowed was passed
+    if(cnt == maxallowed)Y += window;
+    
+    l.release = pred_release + pred_duration + X;
+    l.deadline = pred_deadline + l.activity_duration + Y;
+    
+    // assert (1) - (3)
+    assert(pred_release + pred_duration <= pred_deadline); // (1) for predecessor
+    assert(l.release + l.activity_duration <= l.deadline); //(1)
+    assert(pred_release + pred_duration <= l.release); // (2)
+    assert(pred_deadline + l.activity_duration <= l.deadline); //(3)
+    
+    // do a BFS!
+    if(!l.successor_ids.empty() && l.num_successors != 0) {
+        for(vector<int>::const_iterator it = l.successor_ids.begin(); it != l.successor_ids.end(); ++it) {
+            generate_times(v, v[*it - 1], l.release, l.deadline, l.activity_duration);
         }
-        else {
-            l.release -= georv(1.0 / l.activity_duration);
-            l.deadline += georv(1.0 / l.activity_duration);
-        }
-        
-        l.release = max(0, l.release); // clamp to 0
-        
-        assert(l.deadline - l.release >= l.activity_duration);
-        
-        // now proceed with successors and use as mintime mintime+duration
-        if(!l.successor_ids.empty())
-            for(vector<int>::const_iterator it = l.successor_ids.begin(); it != l.successor_ids.end(); ++it) {
-                generate_times(v, v[(*it) - 1], mintime + l.activity_duration);
-            }
     }
 }
 
@@ -406,7 +434,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     // deadline, release >= 0
     srand((unsigned int)time(NULL));
     if(!file->data_lines.empty())
-        generate_times(file->data_lines, file->data_lines[0], 0);
+        generate_times(file->data_lines, file->data_lines[0], 0, 0, 0); // call with trivial solution
     
     
     // now get maxtime
@@ -480,7 +508,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     ofs<<"maxProgress  = [";
     if(!file->data_lines.empty())
         for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
-            ofs<<(1.0 / it->activity_duration); // change here for other max progress...
+            ofs<<(1.0 / it->activity_duration + 0.000001); // change here for other max progress...
             if(it != file->data_lines.end() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
@@ -513,7 +541,8 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
                 if(!dummynodes) {
                     if(*jt != file->num_nodes)  { // print only if not last node
                         ofs<<"<"<<curid<<","<<(*jt) - 1<<">";
-                        if(curid != activity_count - 1)ofs<<",";
+                        if(curid != activity_count - 1
+                           && (it)->successor_ids[0] != activity_count - 1)ofs<<",";
                     }
                     
                     

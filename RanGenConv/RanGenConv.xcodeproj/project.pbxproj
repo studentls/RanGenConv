@@ -27,6 +27,7 @@
 		5431CC5A1A2766E1009C8017 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		5431CC611A2CE989009C8017 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample.txt; sourceTree = "<group>"; };
 		545BC05C1A4F69D2008A548F /* test.rcp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.rcp; sourceTree = "<group>"; };
+		548DDB8D1A5F2C4C003E36F3 /* Pat7.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Pat7.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +60,7 @@
 		5431CC591A2766E1009C8017 /* RanGenConv */ = {
 			isa = PBXGroup;
 			children = (
+				548DDB8D1A5F2C4C003E36F3 /* Pat7.txt */,
 				545BC05C1A4F69D2008A548F /* test.rcp */,
 				5431CC611A2CE989009C8017 /* sample.txt */,
 				5431CC5A1A2766E1009C8017 /* main.cpp */,
