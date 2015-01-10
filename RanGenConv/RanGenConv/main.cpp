@@ -36,18 +36,24 @@ template<typename T> T max(const T& a, const T& b) {
 // make life easier
 using namespace std;
 
+struct edge {
+    int i; // parent
+    int j; // child
+};
+
 // struct to hold one data line of the patterson format
-class data_line {
+class node {
 public:
-    int id; // min, max are the dummynodes
+    int id; // min, max are the dummynodes --> starts with 1
     int activity_duration;
     vector<int> resource_requirements;
     int num_successors;
-    vector<int> successor_ids;
+    vector<int> children; // starts with 1
+    vector<int> parents;  // starts with 1
     int release;
     int deadline;
     
-    data_line() : activity_duration(0), num_successors(0), release(0), deadline(0), id(-1) {
+    node() : activity_duration(0), num_successors(0), release(0), deadline(0), id(-1) {
         
     }
 };
@@ -58,7 +64,7 @@ struct rangen_file {
     int num_resources;              // number of renewable resources
     vector<int> resource_availability;  // vector containing availabilitys
     // of the num_resources resources
-    vector<data_line> data_lines;       // vector of all data entries
+    vector<node> nodes;       // vector of all data entries
 };
 
 string program_name;
@@ -95,10 +101,35 @@ void print_usage(FILE * stream, int exit_code) {
     exit(exit_code);
 }
 
+// construct tree with relations
+void construct_tree(vector<node>& v, node& root) {
+    // go through all connections and add parents
+    
+    // if node is not a leaf, add root as parent to children!
+    if(!root.children.empty()) {
+    
+        // check if root is assigned to any children as parent
+        for(vector<int>::iterator it = root.children.begin(); it != root.children.end(); ++it) {
+            
+            node& child = v[*it - 1];
+            
+            vector<int>::iterator jt = find(child.parents.begin(), child.parents.end(), root.id);
+            
+            // if not found, add to parents' list!
+            if(jt == child.parents.end()) {
+                child.parents.push_back(root.id);
+            }
+            
+            // do the same for all children
+            construct_tree(v, child);
+        }
+    }
+}
+
 // function to parse a rangenfile
 rangen_file* parserg_file(const char *filename) {
     rangen_file *file = new rangen_file;
-    data_line dline;
+    node dline;
     
     ifstream ifs;
     
@@ -119,7 +150,7 @@ rangen_file* parserg_file(const char *filename) {
             
             //cout << line << endl;
             if(!dline.resource_requirements.empty())dline.resource_requirements.clear();
-            if(!dline.successor_ids.empty())dline.successor_ids.clear();
+            if(!dline.children.empty())dline.children.clear();
             
             
             // zero line
@@ -140,8 +171,8 @@ rangen_file* parserg_file(const char *filename) {
             }
             else {
                 
-                /*if(!file->data_lines.empty())
-                    if(file->data_lines.size() == file->num_nodes - 2)
+                /*if(!file->nodes.empty())
+                    if(file->nodes.size() == file->num_nodes - 2)
                         continue;*/
                 
                 
@@ -156,11 +187,11 @@ rangen_file* parserg_file(const char *filename) {
                 int successor = 0;
                 for(int j = 0; j < dline.num_successors; j++) {
                     ss >> successor;
-                    dline.successor_ids.push_back(successor);
+                    dline.children.push_back(successor);
                 }
                 dline.id = id++; //
                 
-                file->data_lines.push_back(dline);
+                file->nodes.push_back(dline);
             }
             
             line_number++;
@@ -176,8 +207,9 @@ rangen_file* parserg_file(const char *filename) {
             }
         }
 
-
     
+    // assign all relations
+    construct_tree(file->nodes, file->nodes[0]);
     
     return file;
 }
@@ -210,67 +242,131 @@ int georv(const double rate) {
     return (int)floor(log(drandom(0.0, 1.0)) / log(1.0 - rate));
 }
 
+int vector_maxi(const vector<int>& v) {
+    int _max = -999999999; // -inf
+    
+    for(vector<int>::const_iterator it = v.begin(); it != v.end(); ++it) {
+        _max = ::max(_max, *it);
+    }
+    
+    return _max;
+}
+
 // here release & deadlines are generated for the vector v
 // v holds the data array
 // l is the current node for which things shall be generated
 // rest is data of predecessor
-void generate_times(vector<data_line>& v, data_line& l, const int pred_release, const int pred_deadline, const int pred_duration) {
+void generate_times(vector<node>& v, node& root) {
     
     // for the generation three constraints have to be fulfilled
     
-    // (1) deadline(node) - release(node) >= duration(node)
-    // (2) release(succ) - release(pred) >= duration(pred)
-    // (3) deadline(succ) - deadline(pred) >= duration(succ)
+    // Let I be the set of all predecessor of node j
+    // i.e. precedences <i,j> hold for all i € I
     
-    // Algorithm:
-    // step 1:  Choose X, Z >= 0 s.t.
-    //          X+Z >= deadline(pred) - release(pred) - duration(pred)
-    // step 2:  Set Y as
-    //          Y = X + Z - (deadline(pred) - release(pred) - duration(pred))
-    // step 3:  Calculate times by
-    //          release(succ)  = release(pred)  + duration(pred) + X
-    //          deadline(succ) = deadline(pred) + duration(succ) + Y
-    // Note that: pred with all set to 0 trivially fulfills (1) - (3) ==> start with trivial solution at first place!
+    // d_x ... deadline of node x
+    // r_x ... release time of node x
+    // p_x ... duration of node x
     
-    int X = 0, Z = 0;
-    int maxallowed = 4000;
-    int cnt = 0;
+    //  (1) d_i - r_i >= p_i    forall i € I
+    //      d_j - r_j >= p_j
+    //  (2) r_j - r_i >= p_i    forall i € I
+    //  (3) d_j - d_i >= p_j    forall i € I
     
-    int window = pred_deadline - pred_release - pred_duration; // makewindow
+    // algorithm:
+    // step1:   d_max = max d_i over I
+    //          r_max = max r_i over I
+    //          p_max = max p_i over I
+    // step2:   W ~ Geo(l1) Z ~ Geo(l2)
+    //          X := d_max -r_max + Z
+    //          Y := p_max + W
+    // step3:
+    //          r_j := max{p_i + r_i} over I + X
+    //          d_j := p_j + d_max + Y
     
-    // generate matching values but limit to meaningful max time
-    do {
-        
-        X = georv(1.0 / (double)l.activity_duration); // this can be arbitrary...
-        Z = georv(1.0 / (double)(pred_duration + l.activity_duration)); // this can be arbitrary...
-        
-        // special case dummy nodes
-        if(l.activity_duration == 0)X = 0;
-        if(pred_duration == 0)Z = 0;
-        
-        cnt++;
-    } while(X + Z < window && cnt < maxallowed);
+    int d_max = 0; // -inf
+    int r_max = 0;
+    int p_max = 0;
     
-    int Y = X + Z - window;
+    int pr_max = 0;
     
-    // correct if maxallowed was passed
-    if(cnt == maxallowed)Y += window;
-    
-    l.release = pred_release + pred_duration + X;
-    l.deadline = pred_deadline + l.activity_duration + Y;
-    
-    // assert (1) - (3)
-    assert(pred_release + pred_duration <= pred_deadline); // (1) for predecessor
-    assert(l.release + l.activity_duration <= l.deadline); //(1)
-    assert(pred_release + pred_duration <= l.release); // (2)
-    assert(pred_deadline + l.activity_duration <= l.deadline); //(3)
-    
-    // do a BFS!
-    if(!l.successor_ids.empty() && l.num_successors != 0) {
-        for(vector<int>::const_iterator it = l.successor_ids.begin(); it != l.successor_ids.end(); ++it) {
-            generate_times(v, v[*it - 1], l.release, l.deadline, l.activity_duration);
+    if(!root.parents.empty()) {
+        for(vector<int>::const_iterator it = root.parents.begin(); it != root.parents.end(); ++it) {
+            node & parent = v[*it - 1];
+            
+            d_max = ::max(d_max, parent.deadline);
+            r_max = ::max(r_max, parent.release);
+            p_max = ::max(p_max, parent.activity_duration);
+            
+            pr_max = ::max(pr_max, parent.activity_duration + parent.release);
         }
     }
+    
+    static double l1 = 0.5;
+    static double l2 = 0.3;
+    
+    int W = georv(l1);
+    int Z = georv(l2);
+    
+    
+    // special case, first dummy node will have everything set to zero!!!
+    if(root.id == 1) {
+        W = Z = 0;
+    }
+    
+    int X = d_max - r_max + Z;
+    int Y = p_max + W;
+    
+    if(X < 0)X = 0;
+    if(Y < 0)Y = 0;
+    
+   // assert(X >= 0);
+    //assert(Y >= 0);
+    
+    root.release = pr_max + Y;
+    root.deadline = root.activity_duration + d_max + X;
+ 
+    // do same for all successors
+    if(!root.children.empty()) {
+        for(vector<int>::const_iterator it = root.children.begin(); it != root.children.end(); ++it) {
+            node & child = v[*it - 1];
+            
+            generate_times(v, child);
+        }
+    }
+}
+
+
+// validate generated times
+// returns true if no error occured
+bool validate_times(vector<node>& v, node& root) {
+    
+    bool res = true;
+    
+    
+    if(root.deadline - root.release < root.activity_duration) {
+        cout<<"violation found: d_"<<root.id<<" - r_"<<root.id<<" < p_"<<root.id<<endl;
+    }
+    
+    if(!root.parents.empty()) {
+        for(vector<int>::const_iterator it = root.parents.begin(); it != root.parents.end(); ++it) {
+            node & parent = v[*it - 1];
+            
+            // check all things
+            edge e;
+            e.i = parent.id; // i is parent
+            e.j = root.id; // j is root
+            
+            if( !(   parent.deadline - parent.release >= parent.activity_duration  // d_i - r_i >= p_i
+                  && root.release - parent.release >= parent.activity_duration // r_j - r_i >= p_i
+                  && root.deadline - parent.deadline >= root.activity_duration // d_j - d_i >= p_j
+                  )) {
+                res = false;
+                cout<<"violation found: <"<<e.i<<","<<e.j<<">"<<endl;
+            }
+        }
+    }
+    
+    return res;
 }
 
 // helper func to check if file exists
@@ -344,9 +440,9 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     ofs<<"<graph id=\"G\" edgedefault=\"directed\">"<<endl;
     
     // first, print nodes
-    if(!file->data_lines.empty()) {
+    if(!file->nodes.empty()) {
         int nid = offset;
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             ofs<<"<node id=\"n"<<nid<<"\">"<<endl;
             ofs<<"<data key=\"d0\">"<<it->activity_duration<<"</data>"<<endl; //d0 = activity duration
             ofs<<"<data key=\"d1\">"<<it->release<<"</data>"<<endl; //d1 = release
@@ -369,13 +465,13 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     if(verbose)cout<<"nodes written..."<<endl;
     
     // progress with edges
-    if(!file->data_lines.empty()) {
+    if(!file->nodes.empty()) {
         int eid = offset;
         int nid = offset;
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             
-            if(!it->successor_ids.empty())
-                for(vector<int>::const_iterator jt = it->successor_ids.begin(); jt != it->successor_ids.end(); ++jt) {
+            if(!it->children.empty())
+                for(vector<int>::const_iterator jt = it->children.begin(); jt != it->children.end(); ++jt) {
                     if(!dummynodes && (*jt == 0 || *jt == file->num_nodes))
                         continue; //dummynodes disabled, skip them!
                     ofs<<"<edge id=\"e"<<eid<<"\" source=\"n"<<(nid)<<"\" target=\"n"<<(*jt)-1<<"\" />"<<endl;
@@ -432,16 +528,22 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     // deadline - release >= activity_duration
     // deadline, release >= 0
     srand((unsigned int)time(NULL));
-    if(!file->data_lines.empty())
-        generate_times(file->data_lines, file->data_lines[0], 0, 0, 0); // call with trivial solution
+    if(!file->nodes.empty())
+        generate_times(file->nodes, file->nodes[0]); // call with trivial solution
     
+    
+    // check for failure
+    if(!validate_times(file->nodes, file->nodes[0])) {
+        cout<<"error: validation of graph failed!"<<endl;
+        exit(1);
+    }
     
     // now get maxtime
      // set maxtime to ceil of latest deadline
     int imaxtime = 0;
-    if(!file->data_lines.empty())
-        for(vector<data_line>::const_iterator it = file->data_lines.begin();
-            it != file->data_lines.end(); it++)
+    if(!file->nodes.empty())
+        for(vector<node>::const_iterator it = file->nodes.begin();
+            it != file->nodes.end(); it++)
         {
             // dmaxtime += it->deadline - it->release; // adding differences
             imaxtime = ::max(imaxtime, it->deadline);
@@ -505,10 +607,10 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     // max progress is 1.0 / activity duration. Can be also something arbitrarily
     // i.e. draw max progress as uniform random variable out of interval [0.2 1]
     ofs<<"maxProgress  = [";
-    if(!file->data_lines.empty())
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+    if(!file->nodes.empty())
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             ofs<<(1.0 / it->activity_duration + 0.000001); // change here for other max progress...
-            if(it != file->data_lines.end() - offset - 1)ofs<<",";
+            if(it != file->nodes.end() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
     
@@ -527,21 +629,20 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // print dummy node if desired
     if(dummynodes) {
-        if(!file->data_lines.empty())
-            if(!file->data_lines[0].successor_ids.empty())
-                for(vector<int>::const_iterator it = file->data_lines[0].successor_ids.begin(); it != file->data_lines.front().successor_ids.end(); ++it)
+        if(!file->nodes.empty())
+            if(!file->nodes[0].children.empty())
+                for(vector<int>::const_iterator it = file->nodes[0].children.begin(); it != file->nodes.front().children.end(); ++it)
                     ofs<<"<1,"<<*it<<">,";
     }
     
-    if(!file->data_lines.empty()) {
+    if(!file->nodes.empty()) {
         int curid = dummynodes ? 2 : 1;
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + 1; it != file->data_lines.end(); ++it) {
-            for(vector<int>::const_iterator jt = it->successor_ids.begin(); jt != it->successor_ids.end(); ++jt) {
+        for(vector<node>::const_iterator it = file->nodes.begin() + 1; it != file->nodes.end(); ++it) {
+            for(vector<int>::const_iterator jt = it->children.begin(); jt != it->children.end(); ++jt) {
                 if(!dummynodes) {
                     if(*jt != file->num_nodes)  { // print only if not last node
                         ofs<<"<"<<curid<<","<<(*jt) - 1<<">";
-                        if(curid != activity_count - 1
-                           && (it)->successor_ids[0] != activity_count - 1)ofs<<",";
+                        if(curid != activity_count - 1)ofs<<",";
                     }
                     
                     
@@ -560,10 +661,10 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // release
     ofs<<"release  = [";
-    if(!file->data_lines.empty())
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+    if(!file->nodes.empty())
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             ofs<<it->release; // change here for other max progress...
-            if(it != file->data_lines.end() - offset - 1)ofs<<",";
+            if(it != file->nodes.end() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
     
@@ -571,10 +672,10 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // deadline
     ofs<<"deadline  = [";
-    if(!file->data_lines.empty())
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+    if(!file->nodes.empty())
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             ofs<<it->deadline; // change here for other max progress...
-            if(it != file->data_lines.end() - offset - 1)ofs<<",";
+            if(it != file->nodes.end() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
     
@@ -582,8 +683,8 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // res_demand
     ofs<<"res_demand = [";
-    if(!file->data_lines.empty()) {
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+    if(!file->nodes.empty()) {
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             // go through all resources and print activity's demand out!
             ofs<<"[";
             if(!it->resource_requirements.empty())
@@ -592,7 +693,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
                     if(jt != it->resource_requirements.end() - 1)ofs<<",";
                 }
             ofs<<"]";
-            if(it != file->data_lines.end() - offset - 1)ofs<<",";
+            if(it != file->nodes.end() - offset - 1)ofs<<",";
         }
     }
     ofs<<"];"<<endl;
@@ -630,8 +731,8 @@ bool validate_input(bool verbose, const char *filename) {
     
     // check for all lines if numbers make sense (i.e. all info is there)
     int l = 1;
-    for(vector<data_line>::const_iterator it = file->data_lines.begin(); it != file->data_lines.end(); ++it) {
-        if(it->num_successors != it->successor_ids.size()) {
+    for(vector<node>::const_iterator it = file->nodes.begin(); it != file->nodes.end(); ++it) {
+        if(it->num_successors != it->children.size()) {
             cout <<"line #"<<l<<": inconsistency found"<<endl;
             err = true;
         }
