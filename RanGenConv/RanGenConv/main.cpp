@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cassert>
 #include <vector>
+#include <stack>
 
 #ifndef DEBUG
 #ifdef _DEBUG
@@ -155,6 +156,34 @@ bool isCyclic(Adjacencymatrix& m) {
 	delete[] recStack;
 
 	return res;
+}
+
+void topolocialSortUtil(Adjacencymatrix & m, int v, bool *visited, stack<int>& Stack) {
+	// mark current node as visited
+	visited[v] = true;
+
+	// go through all adjacent vertices
+	for (int i = 0; i < m.node_count(); i++) {
+		if (!m.get(v, i))continue; // skip non-adjacent vertices
+
+		if (!visited[i])
+			topolocialSortUtil(m, i, visited, Stack);
+	}
+
+	// push vertex to stack to store result
+	Stack.push(v);
+}
+void topologicalSort(Adjacencymatrix& m, stack<int>& Stack) {
+
+	bool *visited = new bool[m.node_count()];
+	for (int i = 0; i < m.node_count(); i++) {
+		visited[i] = false;
+	}
+
+	// call helper to store topological sort on stack
+	for (int i = 0; i < m.node_count(); i++)
+		if (!visited[i])
+			topolocialSortUtil(m, i, visited, Stack);
 }
 
 // struct to hold data of one file
@@ -313,6 +342,10 @@ rangen_file* parserg_file(const char *filename) {
 		}
 		else cout << "graph is a DAG, all fine" << endl;
 
+		// now perform the topological sort!
+		//topologicalSort(file->m);
+
+
 		for (int i = 0; i < file->num_nodes; i++) {
 			cout << "node " << i << " children:  ";
 			for (int j = 0; j < file->num_nodes; j++) {
@@ -378,6 +411,107 @@ int vector_maxi(const vector<int>& v) {
 
 vector<int> g_visits;
 
+// new advanced algorithm
+void ngenerate_times(rangen_file *file, stack<int>& Stack, const int limit = 10) {
+
+	// for better reading
+	Adjacencymatrix& adj = file->m;
+	vector<node>& v = file->nodes;
+
+#ifdef DEBUG
+	//g_visits.push_back(j);
+#endif
+
+	while (!Stack.empty()) {
+		int j = Stack.top();
+		Stack.pop();
+
+		// for the generation three constraints have to be fulfilled
+
+		// Let I be the set of all predecessor of node j
+		// i.e. precedences <i,j> hold for all i € I
+
+		// d_x ... deadline of node x
+		// r_x ... release time of node x
+		// p_x ... duration of node x
+
+		//  (1) d_i - r_i >= p_i    forall i € I
+		//      d_j - r_j >= p_j
+		//  (2) r_j - r_i >= p_i    forall i € I
+		//  (3) d_j - d_i >= p_j    forall i € I
+
+		// algorithm:
+		// step1:   d_max = max d_i over I
+		//          r_max = max r_i over I
+		//          p_max = max p_i over I
+		// step2:   W ~ Geo(l1) Z ~ Geo(l2) or other discrete distribution, but W, Z >= 0 must hold true
+		//          X := p_max + W
+		//          Y := X + Z
+		// step3:
+		//          r_j := r_max + X
+		//          d_j := p_j + d_max + Y
+
+
+
+
+		int d_max = 0; // -inf
+		int r_max = 0;
+		int p_max = 0;
+
+		// go through all parents
+		for (int i = 0; i < file->num_nodes; ++i) {
+			// check if set
+			if (adj.get(i, j)) {
+				// i is parent of j!
+				node & parent = v[i];
+
+				d_max = ::max(d_max, parent.deadline);
+				r_max = ::max(r_max, parent.release);
+				p_max = ::max(p_max, parent.activity_duration);
+			}
+		}
+
+		static double l1 = 0.6;
+		static double l2 = 0.4;
+
+		int W = georv(l1);
+		int Z = georv(l2);
+
+		// only allowed values, limit W, Z to avoid exploding the time horizon
+		W = ::min(W, limit - rand() % (limit / 2)); // add some dynamic to limiting!
+		Z = ::min(Z, limit - rand() % (limit / 2));
+
+		// special case, first dummy node will have everything set to zero!!!
+		if (j == 0) {
+			W = Z = 0;
+		}
+
+		if (d_max < r_max) {
+			cout << "error: logical flaw found!!! d_max < r_max" << endl;
+		}
+
+		int X = p_max + W;
+		int Y = X + Z;
+
+		v[j].release = r_max + X;
+		v[j].deadline = v[j].activity_duration + d_max + Y;
+
+
+		if (Y < X) {
+			cout << "something is wrong here" << endl;
+		}
+#ifdef DEBUG
+		assert(p_max >= 0);
+		assert(r_max >= 0);
+		assert(d_max >= 0);
+		assert(X >= p_max);
+		assert(Y >= X);
+		assert(v[j].deadline - v[j].release >= v[j].activity_duration);
+#endif
+	}
+
+}
+
 // here release & deadlines are generated for the vector v
 // v holds the data array
 // l is the current node for which things shall be generated
@@ -389,7 +523,7 @@ void generate_times(rangen_file *file, const int j, const int limit = 10) {
 	vector<node>& v = file->nodes;
 
 #ifdef DEBUG
-	g_visits.push_back(j);
+	//g_visits.push_back(j);
 #endif
 
     // for the generation three constraints have to be fulfilled
@@ -484,8 +618,71 @@ void generate_times(rangen_file *file, const int j, const int limit = 10) {
 	}
 
 #ifdef DEBUG
-	if(g_visits.size() % 10 == 0)cout << "visited " << g_visits.size() <<" nodes till now..."<< endl;
+	//if(g_visits.size() % 10 == 0)cout << "visited " << g_visits.size() <<" nodes till now..."<< endl;
 #endif
+}
+
+
+// validate generated times
+// returns true if no error occured
+bool nvalidate_times(rangen_file *file) {
+
+	bool res = true;
+
+	for(int j = 0; j < file->m.node_count(); j++) {
+
+		vector<node>& v = file->nodes;
+		Adjacencymatrix& adj = file->m;
+		node& root = v[j];
+
+		double rmaxprogress = 1.0 / root.activity_duration + 0.000001;
+		int rduration = 1.0 / rmaxprogress;
+
+
+		if (root.deadline - root.release < root.activity_duration) {
+			cout << "violation found: d_" << root.id << " - r_" << root.id << " < p_" << root.id << endl;
+		}
+
+		if (root.deadline - root.release < rduration) {
+			cout << "rounding violation found: d_" << root.id << " - r_" << root.id << " < p_" << root.id << endl;
+		}
+
+		// go through parents
+		for (int i = 0; i < v.size(); ++i) {
+
+			if (adj.get(i, j)) {
+				node & parent = v[i];
+
+				// check all things
+				edge e;
+				e.i = parent.id; // i is parent
+				e.j = root.id; // j is root
+				//cout << "checking <" << i << "," << j << ">" << endl;
+				if (!(parent.deadline - parent.release >= parent.activity_duration  // d_i - r_i >= p_i
+					&& root.release - parent.release >= parent.activity_duration // r_j - r_i >= p_i
+					&& root.deadline - parent.deadline >= root.activity_duration // d_j - d_i >= p_j
+					)) {
+					res = false;
+					cout << "violation found: <" << e.i << "," << e.j << ">" << endl;
+				}
+
+				double pmaxprogress = 1.0 / parent.activity_duration + 0.000001;
+				int pduration = 1.0 / pmaxprogress;
+
+				if (!(parent.deadline - parent.release >= pduration  // d_i - r_i >= p_i
+					&& root.release - parent.release >= pduration // r_j - r_i >= p_i
+					&& root.deadline - parent.deadline >= rduration // d_j - d_i >= p_j
+					)) {
+					res = false;
+					cout << "rounding violation found: <" << e.i << "," << e.j << ">" << endl;
+				}
+			}
+
+		}
+
+	}
+
+	return res;
 }
 
 
@@ -717,18 +914,36 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
 	srand(0);
 
 	if (verbose)cout << "generating times..." << endl;
+
+	/*
+	// old version
     if(!file->nodes.empty())
         generate_times(file, 0, time_limit); // call with trivial solution
 #ifdef DEBUG
 	cout << "visited " << g_visits.size() << endl;
 #endif
+	*/
+	// new advanced algorithm
+	stack<int> Stack;
+	topologicalSort(file->m, Stack); // perform topological sort first
+	// new method
+	ngenerate_times(file, Stack, time_limit);
+
 	if (verbose)cout << "times successfully generated!" << endl;
 	if (verbose)cout << "validating graph..." << endl;
     // check for failure
-    if(!validate_times(file, 0)) {
+   /* if(!validate_times(file, 0)) {
         cout<<"error: validation of graph failed!"<<endl;
         exit(1);
+	}*/
+
+	// validation
+	if(!nvalidate_times(file)) {
+	cout<<"error: validation of graph failed!"<<endl;
+	exit(1);
 	}
+
+#pragma warning "here put something new!"
 	else if (verbose)cout << "graph successfully validated!" << endl;
     
     // now get maxtime
