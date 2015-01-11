@@ -104,7 +104,58 @@ public:
 		for (int i = 0; i < num_nodes * num_nodes; i++)adj[i] = 0;
 	}
 
+	int node_count() { return num_nodes; }
 };
+
+// helper function to check if graph contains cycles
+bool isCyclicUtil(Adjacencymatrix& m, int v, bool *visited, bool *recStack) {
+	assert(visited);
+	assert(recStack);
+
+	if (!visited[v]) {
+		//mark current node as visited, push on stack
+		visited[v] = true;
+		recStack[v] = true;
+
+		for (int i = 0; i < m.node_count(); i++) {
+			
+			// skip non-adjacent nodes
+			if (!m.get(v, i))continue;
+
+			// check for all adjacent nodes, if they will lead to a back edge!
+			if (!visited[i] && isCyclicUtil(m, i, visited, recStack))
+				return true;
+			else if (recStack[i])
+				return true;
+		}
+	}
+	recStack[v] = false; // remove from stack
+	return false;
+}
+
+// check if graph is cyclic for given matrix
+bool isCyclic(Adjacencymatrix& m) {
+	bool res = false;
+	bool *visited = new bool[m.node_count()];
+	bool *recStack = new bool[m.node_count()];
+
+	for (int i = 0; i < m.node_count(); i++) {
+		visited[i] = recStack[i] = false;
+	}
+
+	// call helper function to perform recursive dfs search
+	for (int i = 0; i < m.node_count(); i++) {
+		if (isCyclicUtil(m, i, visited, recStack)) {
+			res = true;
+			break;
+		}
+	}
+	
+	delete[] visited;
+	delete[] recStack;
+
+	return res;
+}
 
 // struct to hold data of one file
 struct rangen_file {
@@ -255,6 +306,13 @@ rangen_file* parserg_file(const char *filename) {
     // assign all relations
 		build_adjmatrix(file);
     
+		// now check if graph is really a DAG!
+		if (isCyclic(file->m)) {
+			cout << "we have a huge problem! The graph is not a DAG!!!" << endl;
+			exit(1);
+		}
+		else cout << "graph is a DAG, all fine" << endl;
+
 		for (int i = 0; i < file->num_nodes; i++) {
 			cout << "node " << i << " children:  ";
 			for (int j = 0; j < file->num_nodes; j++) {
@@ -395,7 +453,7 @@ void generate_times(rangen_file *file, const int j, const int limit = 10) {
     }
     
 	if (d_max < r_max) {
-		cout << "logical flaw found" << endl;
+		cout << "error: logical flaw found!!! d_max < r_max" << endl;
 	}
 
 	int X = p_max + W;
@@ -424,6 +482,10 @@ void generate_times(rangen_file *file, const int j, const int limit = 10) {
 			generate_times(file, k, limit);
 		}
 	}
+
+#ifdef DEBUG
+	if(g_visits.size() % 10 == 0)cout << "visited " << g_visits.size() <<" nodes till now..."<< endl;
+#endif
 }
 
 
@@ -657,6 +719,9 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
 	if (verbose)cout << "generating times..." << endl;
     if(!file->nodes.empty())
         generate_times(file, 0, time_limit); // call with trivial solution
+#ifdef DEBUG
+	cout << "visited " << g_visits.size() << endl;
+#endif
 	if (verbose)cout << "times successfully generated!" << endl;
 	if (verbose)cout << "validating graph..." << endl;
     // check for failure
