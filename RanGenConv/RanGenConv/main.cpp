@@ -304,7 +304,8 @@ double exprv(const double rate) {
 
 // return geometric distributed random variable
 int georv(const double rate) {
-    return (int)floor(log(drandom(0.0, 1.0)) / log(1.0 - rate));
+	// dont forget max, as random generator can return 0
+	  return ::max((int)floor(log(drandom(0.0, 1.0)) / log(1.0 - rate)), 0);
 }
 
 int vector_maxi(const vector<int>& v) {
@@ -388,7 +389,7 @@ void generate_times(rangen_file *file, const int j, const int limit = 10) {
 	W = ::min(W, limit - rand() % (limit / 2)); // add some dynamic to limiting!
 	Z = ::min(Z, limit - rand() % (limit / 2));
 
-    // special case, first dummy node will have everything set to zero!!!
+	// special case, first dummy node will have everything set to zero!!!
     if(j == 0) {
         W = Z = 0;
     }
@@ -403,6 +404,10 @@ void generate_times(rangen_file *file, const int j, const int limit = 10) {
 	v[j].release = r_max + X;
 	v[j].deadline = v[j].activity_duration + d_max + Y;
 
+
+	if (Y < X) {
+		cout << "something is wrong here" << endl;
+	}
 #ifdef DEBUG
 	assert(p_max >= 0);
 	assert(r_max >= 0);
