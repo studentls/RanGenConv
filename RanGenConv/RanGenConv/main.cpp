@@ -10,6 +10,11 @@
 #include <cassert>
 #include <vector>
 
+#ifndef DEBUG
+#ifdef _DEBUG
+#define DEBUG
+#endif
+#endif
 // inc for easy commandline parsing
 #ifdef WIN32
 
@@ -19,6 +24,10 @@
 
 template<typename T> T max(const T& a, const T& b) {
     return a > b ? a : b;
+}
+
+template<typename T> T min(const T& a, const T& b) {
+	return a < b ? a : b;
 }
 
 #else
@@ -36,20 +45,65 @@ template<typename T> T max(const T& a, const T& b) {
 // make life easier
 using namespace std;
 
+struct edge {
+    int i; // parent
+    int j; // child
+};
+
 // struct to hold one data line of the patterson format
-class data_line {
+class node {
 public:
-    int id; // min, max are the dummynodes
+    int id; // min, max are the dummynodes --> starts with 1
     int activity_duration;
     vector<int> resource_requirements;
     int num_successors;
-    vector<int> successor_ids;
+    vector<int> children; // starts with 1
+	vector<int> parents; // starts with 1
     int release;
     int deadline;
     
-    data_line() : activity_duration(0), num_successors(0), release(0), deadline(0), id(-1) {
+    node() : activity_duration(0), num_successors(0), release(0), deadline(0), id(-1) {
         
     }
+};
+
+
+class Adjacencymatrix {
+private:
+	int num_nodes;
+	unsigned char *adj;
+
+	void clear() {
+		if (adj)delete[] adj;
+		adj = NULL;
+		num_nodes = 0;
+	}
+public:
+	Adjacencymatrix() : num_nodes(0), adj(NULL) {
+
+	}
+	~Adjacencymatrix() {
+		clear();
+	}
+
+	void set(const unsigned int i, const unsigned int j, const unsigned char val) {
+		assert(adj);
+		assert(0 <= i && 0 <= j && i < num_nodes && j < num_nodes);
+		adj[i + j * num_nodes] = val;
+	}
+
+	unsigned char get(const int i, const int j) {
+		assert(adj);
+		return adj[i + j * num_nodes];
+	}
+
+	void create(const int _num_nodes) {
+		if (adj)clear();
+		num_nodes = _num_nodes;
+		adj = new unsigned char[num_nodes * num_nodes];
+		for (int i = 0; i < num_nodes * num_nodes; i++)adj[i] = 0;
+	}
+
 };
 
 // struct to hold data of one file
@@ -58,7 +112,8 @@ struct rangen_file {
     int num_resources;              // number of renewable resources
     vector<int> resource_availability;  // vector containing availabilitys
     // of the num_resources resources
-    vector<data_line> data_lines;       // vector of all data entries
+    vector<node> nodes;       // vector of all data entries
+	Adjacencymatrix m; // adjacencymatrix corresponding to nodes
 };
 
 string program_name;
@@ -72,7 +127,7 @@ const struct option long_options[] = {
     {"verbose", 0, NULL, 'v'},
     {"graphml", 0, NULL, 'g'},
     {"dummy", 0, NULL, 'd'},
-	{ "timedomain", 1, NULL, 't' },
+	{ "timelimit", 1, NULL, 't' },
     {NULL, 0, NULL, 0}
 };
 
@@ -92,14 +147,33 @@ void print_usage(FILE * stream, int exit_code) {
             "   -v --verbose                perform in verbose mode\n"
             "   -g --graphml                output additionally GraphML file\n"
             "   -d --dummy                  output dummy nodes at start and end\n"
-			"   -t --timedomain  value      force time domain to value");
+			"   -t --timelimit  value       limit X, Y range. Higher values lead to more flexibility but a higher time horizon");
     exit(exit_code);
+}
+
+// build adjacency matrix
+void build_adjmatrix(rangen_file *file) {
+
+	// reserve space
+	file->m.create(file->nodes.size());
+
+	// go through nodes and add everything relevant
+	if(!file->nodes.empty())
+		for (vector<node>::const_iterator it = file->nodes.begin(); it != file->nodes.end(); ++it) {
+		int i = it->id - 1; // conv to c++ index
+		int j = -1;
+		if(!it->children.empty())
+			for (vector<int>::const_iterator jt = it->children.begin(); jt != it->children.end(); ++jt) {
+			j = *jt - 1; // conv to c++ index
+			file->m.set(i, j, true);
+		}
+	}
 }
 
 // function to parse a rangenfile
 rangen_file* parserg_file(const char *filename) {
     rangen_file *file = new rangen_file;
-    data_line dline;
+    node dline;
     
     ifstream ifs;
     
@@ -120,7 +194,7 @@ rangen_file* parserg_file(const char *filename) {
             
             //cout << line << endl;
             if(!dline.resource_requirements.empty())dline.resource_requirements.clear();
-            if(!dline.successor_ids.empty())dline.successor_ids.clear();
+            if(!dline.children.empty())dline.children.clear();
             
             
             // zero line
@@ -141,8 +215,8 @@ rangen_file* parserg_file(const char *filename) {
             }
             else {
                 
-                /*if(!file->data_lines.empty())
-                    if(file->data_lines.size() == file->num_nodes - 2)
+                /*if(!file->nodes.empty())
+                    if(file->nodes.size() == file->num_nodes - 2)
                         continue;*/
                 
                 
@@ -157,11 +231,11 @@ rangen_file* parserg_file(const char *filename) {
                 int successor = 0;
                 for(int j = 0; j < dline.num_successors; j++) {
                     ss >> successor;
-                    dline.successor_ids.push_back(successor);
+                    dline.children.push_back(successor);
                 }
                 dline.id = id++; //
                 
-                file->data_lines.push_back(dline);
+                file->nodes.push_back(dline);
             }
             
             line_number++;
@@ -177,9 +251,31 @@ rangen_file* parserg_file(const char *filename) {
             }
         }
 
+    
+    // assign all relations
+		build_adjmatrix(file);
+    
+		for (int i = 0; i < file->num_nodes; i++) {
+			cout << "node " << i << " children:  ";
+			for (int j = 0; j < file->num_nodes; j++) {
+				if (file->m.get(i, j)) {
+					cout << "(" << j << ")  ";
+				}
+			}
+			cout << endl;
+		}
 
-    
-    
+		for (int i = 0; i < file->num_nodes; i++) {
+			cout << "node " << i << " parents:  ";
+			for (int j = 0; j < file->num_nodes; j++) {
+				if (file->m.get(j, i)) {
+					cout << "(" << j << ")  ";
+				}
+			}
+			cout << endl;
+		}
+
+			
     return file;
 }
 
@@ -211,67 +307,185 @@ int georv(const double rate) {
     return (int)floor(log(drandom(0.0, 1.0)) / log(1.0 - rate));
 }
 
+int vector_maxi(const vector<int>& v) {
+    int _max = -999999999; // -inf
+    
+    for(vector<int>::const_iterator it = v.begin(); it != v.end(); ++it) {
+        _max = ::max(_max, *it);
+    }
+    
+    return _max;
+}
+
+vector<int> g_visits;
+
 // here release & deadlines are generated for the vector v
 // v holds the data array
 // l is the current node for which things shall be generated
 // rest is data of predecessor
-void generate_times(vector<data_line>& v, data_line& l, const int pred_release, const int pred_deadline, const int pred_duration) {
-    
+void generate_times(rangen_file *file, const int j, const int limit = 10) {
+
+	// for better reading
+	Adjacencymatrix& adj = file->m;
+	vector<node>& v = file->nodes;
+
+#ifdef DEBUG
+	g_visits.push_back(j);
+#endif
+
     // for the generation three constraints have to be fulfilled
     
-    // (1) deadline(node) - release(node) >= duration(node)
-    // (2) release(succ) - release(pred) >= duration(pred)
-    // (3) deadline(succ) - deadline(pred) >= duration(succ)
+    // Let I be the set of all predecessor of node j
+    // i.e. precedences <i,j> hold for all i € I
     
-    // Algorithm:
-    // step 1:  Choose X, Z >= 0 s.t.
-    //          X+Z >= deadline(pred) - release(pred) - duration(pred)
-    // step 2:  Set Y as
-    //          Y = X + Z - (deadline(pred) - release(pred) - duration(pred))
-    // step 3:  Calculate times by
-    //          release(succ)  = release(pred)  + duration(pred) + X
-    //          deadline(succ) = deadline(pred) + duration(succ) + Y
-    // Note that: pred with all set to 0 trivially fulfills (1) - (3) ==> start with trivial solution at first place!
+    // d_x ... deadline of node x
+    // r_x ... release time of node x
+    // p_x ... duration of node x
     
-    int X = 0, Z = 0;
-    int maxallowed = 4000;
-    int cnt = 0;
+    //  (1) d_i - r_i >= p_i    forall i € I
+    //      d_j - r_j >= p_j
+    //  (2) r_j - r_i >= p_i    forall i € I
+    //  (3) d_j - d_i >= p_j    forall i € I
     
-    int window = pred_deadline - pred_release - pred_duration; // makewindow
+    // algorithm:
+    // step1:   d_max = max d_i over I
+    //          r_max = max r_i over I
+    //          p_max = max p_i over I
+    // step2:   W ~ Geo(l1) Z ~ Geo(l2) or other discrete distribution, but W, Z >= 0 must hold true
+    //          X := p_max + W
+    //          Y := X + Z
+    // step3:
+    //          r_j := r_max + X
+    //          d_j := p_j + d_max + Y
     
-    // generate matching values but limit to meaningful max time
-    do {
-        
-        X = georv(1.0 / (double)l.activity_duration); // this can be arbitrary...
-        Z = georv(1.0 / (double)(pred_duration + l.activity_duration)); // this can be arbitrary...
-        
-        // special case dummy nodes
-        if(l.activity_duration == 0)X = 0;
-        if(pred_duration == 0)Z = 0;
-        
-        cnt++;
-    } while(X + Z < window && cnt < maxallowed);
+
+
+
+    int d_max = 0; // -inf
+    int r_max = 0;
+    int p_max = 0;
     
-    int Y = X + Z - window;
+	// go through all parents
+	for (int i = 0; i < file->num_nodes; ++i) {
+		// check if set
+		if (adj.get(i, j)) {
+			// i is parent of j!
+			node & parent = v[i];
+
+			d_max = ::max(d_max, parent.deadline);
+			r_max = ::max(r_max, parent.release);
+			p_max = ::max(p_max, parent.activity_duration);
+		}
+	}
+
+    static double l1 = 0.6;
+    static double l2 = 0.4;
     
-    // correct if maxallowed was passed
-    if(cnt == maxallowed)Y += window;
+    int W = georv(l1);
+    int Z = georv(l2);
     
-    l.release = pred_release + pred_duration + X;
-    l.deadline = pred_deadline + l.activity_duration + Y;
-    
-    // assert (1) - (3)
-    assert(pred_release + pred_duration <= pred_deadline); // (1) for predecessor
-    assert(l.release + l.activity_duration <= l.deadline); //(1)
-    assert(pred_release + pred_duration <= l.release); // (2)
-    assert(pred_deadline + l.activity_duration <= l.deadline); //(3)
-    
-    // do a BFS!
-    if(!l.successor_ids.empty() && l.num_successors != 0) {
-        for(vector<int>::const_iterator it = l.successor_ids.begin(); it != l.successor_ids.end(); ++it) {
-            generate_times(v, v[*it - 1], l.release, l.deadline, l.activity_duration);
-        }
+	// only allowed values, limit W, Z to avoid exploding the time horizon
+	W = ::min(W, limit - rand() % (limit / 2)); // add some dynamic to limiting!
+	Z = ::min(Z, limit - rand() % (limit / 2));
+
+    // special case, first dummy node will have everything set to zero!!!
+    if(j == 0) {
+        W = Z = 0;
     }
+    
+	if (d_max < r_max) {
+		cout << "logical flaw found" << endl;
+	}
+
+	int X = p_max + W;
+	int Y = X + Z;
+
+	v[j].release = r_max + X;
+	v[j].deadline = v[j].activity_duration + d_max + Y;
+
+#ifdef DEBUG
+	assert(p_max >= 0);
+	assert(r_max >= 0);
+	assert(d_max >= 0);
+	assert(X >= p_max);
+	assert(Y >= X);
+	assert(v[j].deadline - v[j].release >= v[j].activity_duration);
+#endif
+
+
+	for (int k = 0; k < file->num_nodes; ++k) {
+		if (adj.get(j, k)) {
+			// k is a child of j!
+			generate_times(file, k, limit);
+		}
+	}
+}
+
+
+// validate generated times
+// returns true if no error occured
+bool validate_times(rangen_file *file, int j) {
+    
+    bool res = true;
+    
+	vector<node>& v = file->nodes;
+	Adjacencymatrix& adj = file->m;
+	node& root = v[j];
+
+	double rmaxprogress = 1.0 / root.activity_duration + 0.000001;
+	int rduration = 1.0 / rmaxprogress;
+
+
+    if(root.deadline - root.release < root.activity_duration) {
+        cout<<"violation found: d_"<<root.id<<" - r_"<<root.id<<" < p_"<<root.id<<endl;
+    }
+    
+	if (root.deadline - root.release < rduration) {
+		cout << "rounding violation found: d_" << root.id << " - r_" << root.id << " < p_" << root.id << endl;
+	}
+
+	// go through parents
+	for (int i = 0; i < v.size(); ++i) {
+		
+		if (adj.get(i, j)) {
+			node & parent = v[i];
+
+			// check all things
+			edge e;
+			e.i = parent.id; // i is parent
+			e.j = root.id; // j is root
+			//cout << "checking <" << i << "," << j << ">" << endl;
+			if (!(parent.deadline - parent.release >= parent.activity_duration  // d_i - r_i >= p_i
+				&& root.release - parent.release >= parent.activity_duration // r_j - r_i >= p_i
+				&& root.deadline - parent.deadline >= root.activity_duration // d_j - d_i >= p_j
+				)) {
+				res = false;
+				cout << "violation found: <" << e.i << "," << e.j << ">" << endl;
+			}
+
+			double pmaxprogress = 1.0 / parent.activity_duration + 0.000001;
+			int pduration = 1.0 / pmaxprogress;
+
+			if (!(parent.deadline - parent.release >= pduration  // d_i - r_i >= p_i
+				&& root.release - parent.release >= pduration // r_j - r_i >= p_i
+				&& root.deadline - parent.deadline >= rduration // d_j - d_i >= p_j
+				)) {
+				res = false;
+				cout << "rounding violation found: <" << e.i << "," << e.j << ">" << endl;
+			}
+		}
+		
+	}
+
+
+	// go through all children
+	for (int k = 0; k < v.size(); k++) {
+		if (adj.get(j, k)) {
+			if (!validate_times(file, k))res = false;
+		}
+	}
+
+    return res;
 }
 
 // helper func to check if file exists
@@ -345,9 +559,9 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     ofs<<"<graph id=\"G\" edgedefault=\"directed\">"<<endl;
     
     // first, print nodes
-    if(!file->data_lines.empty()) {
+    if(!file->nodes.empty()) {
         int nid = offset;
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             ofs<<"<node id=\"n"<<nid<<"\">"<<endl;
             ofs<<"<data key=\"d0\">"<<it->activity_duration<<"</data>"<<endl; //d0 = activity duration
             ofs<<"<data key=\"d1\">"<<it->release<<"</data>"<<endl; //d1 = release
@@ -370,13 +584,13 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
     if(verbose)cout<<"nodes written..."<<endl;
     
     // progress with edges
-    if(!file->data_lines.empty()) {
+    if(!file->nodes.empty()) {
         int eid = offset;
         int nid = offset;
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             
-            if(!it->successor_ids.empty())
-                for(vector<int>::const_iterator jt = it->successor_ids.begin(); jt != it->successor_ids.end(); ++jt) {
+            if(!it->children.empty())
+                for(vector<int>::const_iterator jt = it->children.begin(); jt != it->children.end(); ++jt) {
                     if(!dummynodes && (*jt == 0 || *jt == file->num_nodes))
                         continue; //dummynodes disabled, skip them!
                     ofs<<"<edge id=\"e"<<eid<<"\" source=\"n"<<(nid)<<"\" target=\"n"<<(*jt)-1<<"\" />"<<endl;
@@ -397,7 +611,7 @@ bool generate_graphml(const bool verbose, rangen_file *file, const char *ofilena
 }
 
 
-bool generate_output(const bool verbose, const char *ifilename, const char *ofilename, const int time_domain, const bool dummynodes = false, const bool graphml = false) {
+bool generate_output(const bool verbose, const char *ifilename, const char *ofilename, const int time_limit, const bool dummynodes = false, const bool graphml = false) {
     
     
     if(verbose)cout<<">>> get input >>>"<<endl;
@@ -432,25 +646,38 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     // it must hold:
     // deadline - release >= activity_duration
     // deadline, release >= 0
-    srand((unsigned int)time(NULL));
-    if(!file->data_lines.empty())
-        generate_times(file->data_lines, file->data_lines[0], 0, 0, 0); // call with trivial solution
-    
+    //srand((unsigned int)time(NULL));
+	srand(0);
+
+	if (verbose)cout << "generating times..." << endl;
+    if(!file->nodes.empty())
+        generate_times(file, 0, time_limit); // call with trivial solution
+	if (verbose)cout << "times successfully generated!" << endl;
+	if (verbose)cout << "validating graph..." << endl;
+    // check for failure
+    if(!validate_times(file, 0)) {
+        cout<<"error: validation of graph failed!"<<endl;
+        exit(1);
+	}
+	else if (verbose)cout << "graph successfully validated!" << endl;
     
     // now get maxtime
      // set maxtime to ceil of latest deadline
     int imaxtime = 0;
-    if(!file->data_lines.empty())
-        for(vector<data_line>::const_iterator it = file->data_lines.begin();
-            it != file->data_lines.end(); it++)
+    if(!file->nodes.empty())
+        for(vector<node>::const_iterator it = file->nodes.begin();
+            it != file->nodes.end(); it++)
         {
             // dmaxtime += it->deadline - it->release; // adding differences
             imaxtime = ::max(imaxtime, it->deadline);
         }
-    maxtime = ::max(time_domain, imaxtime); // yield value to forced value if it makes sense
+	maxtime = imaxtime;
+   // maxtime = ::max(time_domain, imaxtime); // yield value to forced value if it makes sense
     
+	if(verbose)cout << "time horizon ist " << maxtime << " periods long" << endl;
     
-    
+	assert(imaxtime > 0);
+
     ofstream ofs(ofilename);
     
     if(ofs.bad() || ofs.fail()) {
@@ -506,10 +733,10 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     // max progress is 1.0 / activity duration. Can be also something arbitrarily
     // i.e. draw max progress as uniform random variable out of interval [0.2 1]
     ofs<<"maxProgress  = [";
-    if(!file->data_lines.empty())
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+    if(!file->nodes.empty())
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             ofs<<(1.0 / it->activity_duration + 0.000001); // change here for other max progress...
-            if(it != file->data_lines.end() - offset - 1)ofs<<",";
+            if(it != file->nodes.end() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
     
@@ -528,21 +755,20 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // print dummy node if desired
     if(dummynodes) {
-        if(!file->data_lines.empty())
-            if(!file->data_lines[0].successor_ids.empty())
-                for(vector<int>::const_iterator it = file->data_lines[0].successor_ids.begin(); it != file->data_lines.front().successor_ids.end(); ++it)
+        if(!file->nodes.empty())
+            if(!file->nodes[0].children.empty())
+                for(vector<int>::const_iterator it = file->nodes[0].children.begin(); it != file->nodes.front().children.end(); ++it)
                     ofs<<"<1,"<<*it<<">,";
     }
     
-    if(!file->data_lines.empty()) {
+    if(!file->nodes.empty()) {
         int curid = dummynodes ? 2 : 1;
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + 1; it != file->data_lines.end(); ++it) {
-            for(vector<int>::const_iterator jt = it->successor_ids.begin(); jt != it->successor_ids.end(); ++jt) {
+        for(vector<node>::const_iterator it = file->nodes.begin() + 1; it != file->nodes.end(); ++it) {
+            for(vector<int>::const_iterator jt = it->children.begin(); jt != it->children.end(); ++jt) {
                 if(!dummynodes) {
                     if(*jt != file->num_nodes)  { // print only if not last node
                         ofs<<"<"<<curid<<","<<(*jt) - 1<<">";
-                        if(curid != activity_count - 1
-                           && (it)->successor_ids[0] != activity_count - 1)ofs<<",";
+                        if(curid != activity_count - 1)ofs<<",";
                     }
                     
                     
@@ -561,10 +787,10 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // release
     ofs<<"release  = [";
-    if(!file->data_lines.empty())
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+    if(!file->nodes.empty())
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             ofs<<it->release; // change here for other max progress...
-            if(it != file->data_lines.end() - offset - 1)ofs<<",";
+            if(it != file->nodes.end() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
     
@@ -572,10 +798,10 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // deadline
     ofs<<"deadline  = [";
-    if(!file->data_lines.empty())
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+    if(!file->nodes.empty())
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             ofs<<it->deadline; // change here for other max progress...
-            if(it != file->data_lines.end() - offset - 1)ofs<<",";
+            if(it != file->nodes.end() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
     
@@ -583,8 +809,8 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // res_demand
     ofs<<"res_demand = [";
-    if(!file->data_lines.empty()) {
-        for(vector<data_line>::const_iterator it = file->data_lines.begin() + offset; it != file->data_lines.end() - offset; ++it) {
+    if(!file->nodes.empty()) {
+        for(vector<node>::const_iterator it = file->nodes.begin() + offset; it != file->nodes.end() - offset; ++it) {
             // go through all resources and print activity's demand out!
             ofs<<"[";
             if(!it->resource_requirements.empty())
@@ -593,7 +819,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
                     if(jt != it->resource_requirements.end() - 1)ofs<<",";
                 }
             ofs<<"]";
-            if(it != file->data_lines.end() - offset - 1)ofs<<",";
+            if(it != file->nodes.end() - offset - 1)ofs<<",";
         }
     }
     ofs<<"];"<<endl;
@@ -631,8 +857,8 @@ bool validate_input(bool verbose, const char *filename) {
     
     // check for all lines if numbers make sense (i.e. all info is there)
     int l = 1;
-    for(vector<data_line>::const_iterator it = file->data_lines.begin(); it != file->data_lines.end(); ++it) {
-        if(it->num_successors != it->successor_ids.size()) {
+    for(vector<node>::const_iterator it = file->nodes.begin(); it != file->nodes.end(); ++it) {
+        if(it->num_successors != it->children.size()) {
             cout <<"line #"<<l<<": inconsistency found"<<endl;
             err = true;
         }
@@ -658,8 +884,8 @@ int main(int argc, char * argv[]) {
     char *ifile = NULL;
     char *ofile = NULL;
     
-	int time_domain = -1; // value of -1 indicates nothing forced...
-    int options_used = 1; // one for program name
+	int time_limit = 10; // value of 10 per default
+	int options_used = 1; // one for program name
     int next_option = 0;
     do  {
         
@@ -693,7 +919,7 @@ int main(int argc, char * argv[]) {
                 break;
                 
 				case 't':
-				time_domain = atoi(optarg); // use better c++11 for string conversion in a later deployment
+				time_limit = atoi(optarg); // use better c++11 for string conversion in a later deployment
 				options_used += 2;
 				break;
 
@@ -713,7 +939,6 @@ int main(int argc, char * argv[]) {
     }while(next_option != -1);
     
     // check if there is enough arguments left for input / output files
-    
     if(argc - options_used == 1) {
         cout<<"error: outputfile not specified"<<endl;
         exit(1);
@@ -742,7 +967,7 @@ int main(int argc, char * argv[]) {
         }
         
         // now perform output
-        if(ifile && ofile)generate_output(verbose, ifile, ofile, time_domain, dummynodes, graphml);
+        if(ifile && ofile)generate_output(verbose, ifile, ofile, time_limit, dummynodes, graphml);
     }
     
     if(mode & MODE_CHECK) {
