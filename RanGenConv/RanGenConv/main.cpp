@@ -910,8 +910,8 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     // it must hold:
     // deadline - release >= activity_duration
     // deadline, release >= 0
-    //srand((unsigned int)time(NULL));
-	srand(0);
+    srand((unsigned int)time(NULL));
+	//srand(0);
 
 	if (verbose)cout << "generating times..." << endl;
 
