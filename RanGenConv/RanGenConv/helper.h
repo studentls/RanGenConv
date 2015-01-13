@@ -26,15 +26,6 @@
 #undef UNICODE
 #include "getopt_win.h"
 
-// vc does not define these functions as part of the STL, define here explicitly
-inline template<typename T> T max(const T& a, const T& b) {
-    return a > b ? a : b;
-}
-
-inline template<typename T> T min(const T& a, const T& b) {
-    return a < b ? a : b;
-}
-
 #else
 #include <getopt.h>
 #endif
