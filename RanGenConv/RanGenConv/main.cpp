@@ -269,7 +269,7 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     
     // time
     ofs<<"time = {";
-    for(int i = 1; i < maxtime; i++)ofs<<i<<",";
+    for(int i = offset; i < maxtime; i++)ofs<<i<<",";
     ofs<<maxtime<<"};"<<endl;
     
     if(verbose)cout<<"time written..."<<endl;

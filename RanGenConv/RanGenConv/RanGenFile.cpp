@@ -212,8 +212,12 @@ bool RanGenFile::generate_times(const int limit = 10) {
            cout << "error: logical flaw found!!! d_max < r_max" << endl;
        }
        
+       // check if node has dummy start as parent, if so, inc W by 1 to make sure, all nodes start with time 1!
+       if(G.get(0, j))W += 1;
+       
        int X = p_max + W;
        int Y = X + Z;
+       
        
        G.v(j).release = r_max + X;
        G.v(j).deadline = G.v(j).activity_duration + d_max + Y;
