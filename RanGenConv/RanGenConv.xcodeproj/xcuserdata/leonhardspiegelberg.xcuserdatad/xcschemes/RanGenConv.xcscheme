@@ -59,7 +59,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-v -g /Users/leonhardspiegelberg/Documents/projects/RanGenConv/RanGenConv/RanGenConv/testfile.rcp /Users/leonhardspiegelberg/Documents/projects/RanGenConv/RanGenConv/RanGenConv/sample.dat"
+            argument = "-v -g /Users/leonhardspiegelberg/Documents/projects/RanGenConv/RanGenConv/RanGenConv/sample.txt /Users/leonhardspiegelberg/Documents/projects/RanGenConv/RanGenConv/RanGenConv/sample.dat"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

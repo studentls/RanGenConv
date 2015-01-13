@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5431CC5B1A2766E1009C8017 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5431CC5A1A2766E1009C8017 /* main.cpp */; };
+		54F5AEDD1A63D36A00393E94 /* RanGenFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54F5AEDC1A63D36A00393E94 /* RanGenFile.cpp */; };
+		54F5AEE01A63D43100393E94 /* Graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54F5AEDE1A63D43100393E94 /* Graph.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,6 +31,11 @@
 		545BC05C1A4F69D2008A548F /* test.rcp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.rcp; sourceTree = "<group>"; };
 		548DDB8D1A5F2C4C003E36F3 /* Pat7.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Pat7.txt; sourceTree = "<group>"; };
 		548DDB8E1A6138E6003E36F3 /* testfile.rcp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = testfile.rcp; sourceTree = "<group>"; };
+		54F5AEDB1A63D35C00393E94 /* RanGenFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RanGenFile.h; sourceTree = "<group>"; };
+		54F5AEDC1A63D36A00393E94 /* RanGenFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RanGenFile.cpp; sourceTree = "<group>"; };
+		54F5AEDE1A63D43100393E94 /* Graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Graph.cpp; sourceTree = "<group>"; };
+		54F5AEDF1A63D43100393E94 /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Graph.h; sourceTree = "<group>"; };
+		54F5AEE11A65A94600393E94 /* helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +73,11 @@
 				545BC05C1A4F69D2008A548F /* test.rcp */,
 				5431CC611A2CE989009C8017 /* sample.txt */,
 				5431CC5A1A2766E1009C8017 /* main.cpp */,
+				54F5AEDB1A63D35C00393E94 /* RanGenFile.h */,
+				54F5AEDC1A63D36A00393E94 /* RanGenFile.cpp */,
+				54F5AEDE1A63D43100393E94 /* Graph.cpp */,
+				54F5AEDF1A63D43100393E94 /* Graph.h */,
+				54F5AEE11A65A94600393E94 /* helper.h */,
 			);
 			path = RanGenConv;
 			sourceTree = "<group>";
@@ -126,6 +138,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54F5AEDD1A63D36A00393E94 /* RanGenFile.cpp in Sources */,
+				54F5AEE01A63D43100393E94 /* Graph.cpp in Sources */,
 				5431CC5B1A2766E1009C8017 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
