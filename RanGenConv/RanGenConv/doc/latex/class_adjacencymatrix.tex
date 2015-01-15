@@ -1,0 +1,140 @@
+\hypertarget{class_adjacencymatrix}{}\section{Adjacencymatrix Class Reference}
+\label{class_adjacencymatrix}\index{Adjacencymatrix@{Adjacencymatrix}}
+
+
+stores graph structure as adjacency matrix  
+
+
+
+
+{\ttfamily \#include $<$Graph.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_adjacencymatrix_a1bced3d3b99bd0674903eda2067d6b2b}{Adjacencymatrix} ()
+\item 
+\hyperlink{class_adjacencymatrix_a8c8cb0d9b7ef2b69ffef6aa6bffe5997}{$\sim$\+Adjacencymatrix} ()
+\item 
+void \hyperlink{class_adjacencymatrix_a3bbe9e5ef3dabf7f4db8d7068bc63d56}{set} (const unsigned int i, const unsigned int j, const unsigned char val)
+\begin{DoxyCompactList}\small\item\em sets entry in adjacency matrix to val. Positive values of val indicate edge $<$i, j$>$ is part of edge set. \end{DoxyCompactList}\item 
+unsigned char \hyperlink{class_adjacencymatrix_ae31070ccb7480ac53580ab0f7a356db2}{get} (const int i, const int j)
+\begin{DoxyCompactList}\small\item\em returns positive values if edge $<$i, j$>$ is contained in edge set \end{DoxyCompactList}\item 
+void \hyperlink{class_adjacencymatrix_a1c13b78deff3fe765591ea5a32e02a1e}{create} (const int \+\_\+num\+\_\+nodes)
+\begin{DoxyCompactList}\small\item\em reserves space for the adjacency matrix \end{DoxyCompactList}\item 
+int \hyperlink{class_adjacencymatrix_a93c55ad33e78094b09c4049febb94953}{node\+\_\+count} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_adjacencymatrix_aacf2bfffc9db379af6e76ba0724ef3b6}{clear} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{class_adjacencymatrix_a9f2232f0d4c8d2fef4e62d19de68c3df}{num\+\_\+nodes}
+\item 
+unsigned char $\ast$ \hyperlink{class_adjacencymatrix_a56fd4182b2be467d545e3afd4ec47992}{adj}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+stores graph structure as adjacency matrix based on unsigned chars. Values $>$ 0 indicate that edge exists. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_adjacencymatrix_a1bced3d3b99bd0674903eda2067d6b2b}{}\index{Adjacencymatrix@{Adjacencymatrix}!Adjacencymatrix@{Adjacencymatrix}}
+\index{Adjacencymatrix@{Adjacencymatrix}!Adjacencymatrix@{Adjacencymatrix}}
+\subsubsection[{Adjacencymatrix}]{\setlength{\rightskip}{0pt plus 5cm}Adjacencymatrix\+::\+Adjacencymatrix (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_adjacencymatrix_a1bced3d3b99bd0674903eda2067d6b2b}
+\hypertarget{class_adjacencymatrix_a8c8cb0d9b7ef2b69ffef6aa6bffe5997}{}\index{Adjacencymatrix@{Adjacencymatrix}!````~Adjacencymatrix@{$\sim$\+Adjacencymatrix}}
+\index{````~Adjacencymatrix@{$\sim$\+Adjacencymatrix}!Adjacencymatrix@{Adjacencymatrix}}
+\subsubsection[{$\sim$\+Adjacencymatrix}]{\setlength{\rightskip}{0pt plus 5cm}Adjacencymatrix\+::$\sim$\+Adjacencymatrix (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_adjacencymatrix_a8c8cb0d9b7ef2b69ffef6aa6bffe5997}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_adjacencymatrix_aacf2bfffc9db379af6e76ba0724ef3b6}{}\index{Adjacencymatrix@{Adjacencymatrix}!clear@{clear}}
+\index{clear@{clear}!Adjacencymatrix@{Adjacencymatrix}}
+\subsubsection[{clear}]{\setlength{\rightskip}{0pt plus 5cm}void Adjacencymatrix\+::clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\label{class_adjacencymatrix_aacf2bfffc9db379af6e76ba0724ef3b6}
+\hypertarget{class_adjacencymatrix_a1c13b78deff3fe765591ea5a32e02a1e}{}\index{Adjacencymatrix@{Adjacencymatrix}!create@{create}}
+\index{create@{create}!Adjacencymatrix@{Adjacencymatrix}}
+\subsubsection[{create}]{\setlength{\rightskip}{0pt plus 5cm}void Adjacencymatrix\+::create (
+\begin{DoxyParamCaption}
+\item[{const int}]{\+\_\+num\+\_\+nodes}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_adjacencymatrix_a1c13b78deff3fe765591ea5a32e02a1e}
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+num\+\_\+nodes} & number of nodes to reserve space for \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_adjacencymatrix_ae31070ccb7480ac53580ab0f7a356db2}{}\index{Adjacencymatrix@{Adjacencymatrix}!get@{get}}
+\index{get@{get}!Adjacencymatrix@{Adjacencymatrix}}
+\subsubsection[{get}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char Adjacencymatrix\+::get (
+\begin{DoxyParamCaption}
+\item[{const int}]{i, }
+\item[{const int}]{j}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_adjacencymatrix_ae31070ccb7480ac53580ab0f7a356db2}
+
+\begin{DoxyParams}{Parameters}
+{\em i} & predecessor \\
+\hline
+{\em j} & successor\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+positive values if edge $<$i, h$>$ is part of edge set 
+\end{DoxyReturn}
+\hypertarget{class_adjacencymatrix_a93c55ad33e78094b09c4049febb94953}{}\index{Adjacencymatrix@{Adjacencymatrix}!node\+\_\+count@{node\+\_\+count}}
+\index{node\+\_\+count@{node\+\_\+count}!Adjacencymatrix@{Adjacencymatrix}}
+\subsubsection[{node\+\_\+count}]{\setlength{\rightskip}{0pt plus 5cm}int Adjacencymatrix\+::node\+\_\+count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_adjacencymatrix_a93c55ad33e78094b09c4049febb94953}
+\begin{DoxyReturn}{Returns}
+number of nodes of the representation (not the by edge structure actual implicitly contained ones of the graph) 
+\end{DoxyReturn}
+\hypertarget{class_adjacencymatrix_a3bbe9e5ef3dabf7f4db8d7068bc63d56}{}\index{Adjacencymatrix@{Adjacencymatrix}!set@{set}}
+\index{set@{set}!Adjacencymatrix@{Adjacencymatrix}}
+\subsubsection[{set}]{\setlength{\rightskip}{0pt plus 5cm}void Adjacencymatrix\+::set (
+\begin{DoxyParamCaption}
+\item[{const unsigned int}]{i, }
+\item[{const unsigned int}]{j, }
+\item[{const unsigned char}]{val}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_adjacencymatrix_a3bbe9e5ef3dabf7f4db8d7068bc63d56}
+
+\begin{DoxyParams}{Parameters}
+{\em i} & predecessor \\
+\hline
+{\em j} & successor \\
+\hline
+{\em val} & 0 indicates $<$i, j$>$ not part of edge set, values != 0 part of edge set \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{class_adjacencymatrix_a56fd4182b2be467d545e3afd4ec47992}{}\index{Adjacencymatrix@{Adjacencymatrix}!adj@{adj}}
+\index{adj@{adj}!Adjacencymatrix@{Adjacencymatrix}}
+\subsubsection[{adj}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ Adjacencymatrix\+::adj\hspace{0.3cm}{\ttfamily [private]}}\label{class_adjacencymatrix_a56fd4182b2be467d545e3afd4ec47992}
+\hypertarget{class_adjacencymatrix_a9f2232f0d4c8d2fef4e62d19de68c3df}{}\index{Adjacencymatrix@{Adjacencymatrix}!num\+\_\+nodes@{num\+\_\+nodes}}
+\index{num\+\_\+nodes@{num\+\_\+nodes}!Adjacencymatrix@{Adjacencymatrix}}
+\subsubsection[{num\+\_\+nodes}]{\setlength{\rightskip}{0pt plus 5cm}int Adjacencymatrix\+::num\+\_\+nodes\hspace{0.3cm}{\ttfamily [private]}}\label{class_adjacencymatrix_a9f2232f0d4c8d2fef4e62d19de68c3df}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_graph_8h}{Graph.\+h}\end{DoxyCompactItemize}

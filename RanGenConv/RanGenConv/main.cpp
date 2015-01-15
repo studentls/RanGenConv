@@ -22,23 +22,11 @@
 
 #include <cstring>
 
+#define MODE_CHECK 0x2
+#define MODE_REGULAR 0x4
+
 // make life easier
 using namespace std;
-
-struct edge {
-    int i; // parent
-    int j; // child
-};
-
-// struct to hold data of one file
-struct rangen_file {
-    int num_nodes;                  // including two dummy nodes for start & end
-    int num_resources;              // number of renewable resources
-    vector<int> resource_availability;  // vector containing availabilitys
-    // of the num_resources resources
-    vector<node> nodes;       // vector of all data entries
-	Adjacencymatrix m; // adjacencymatrix corresponding to nodes
-};
 
 string program_name;
 
@@ -61,6 +49,14 @@ const struct option long_options[] = {
 #define PATH_SEPARATOR "/"
 #endif
 
+/**
+ * @brief diplays help message
+ * @details displays all short and long options of the converter. Note that the syntax to use the converter requires to specify first all options and two files (input, output) except if the check mode is used (-c file)
+ * 
+ * @param stream where to output the usage 
+ * @param exit_code exit code with which the program shall finished after usage has been printed
+ * 
+ */
 // print usage function including detailed help for all opts
 void print_usage(FILE * stream, int exit_code) {
     
@@ -76,7 +72,14 @@ void print_usage(FILE * stream, int exit_code) {
 }
 
 
-// helper func to check if file exists
+// 
+/**
+ * @brief helper func to check if file exists
+ * @details checks if file exists by using C++ STL fstream functions
+ * 
+ * @param name path to file to check for
+ * @return true if file exists, false otherwise
+ */
 inline bool exists_file (const std::string& name) {
     ifstream f(name.c_str());
     if (f.good()) {
@@ -88,7 +91,13 @@ inline bool exists_file (const std::string& name) {
     }
 }
 
-// helper func to check if file can be written
+/**
+ * @brief helper func to check if file can be written
+ * @details checks if program is exceuted with permission to write to disk. 
+ * 
+ * @param name path to check for writing permission
+ * @return true if converter could write to given path (name), false otherwise
+ */
 inline bool writable_file (const std::string& name) {
     ofstream f(name.c_str());
     if (f.good()) {
@@ -100,6 +109,17 @@ inline bool writable_file (const std::string& name) {
     }
 }
 
+/**
+ * @brief generates for given RanGenFile graphml output
+ * @details generates for given RanGenFile graphml output for use i.e. in GePhi. GraphML output contains node and edge struture labeling nodes/edges n0, n1, .../ e0, e2, ... . Note that labels start only with 0 iff dummynodes are selected. Furthermore, duration, release, deadline and time between deadline and release are written to the GraphML file.
+ * 
+ * 
+ * @param verbose set to true if messages shall be displayed
+ * @param file reference to RanGenFile for which contents shall be written to GraphML
+ * @param ofilename path to file to write to
+ * @param dummynodes set to true to output dummynodes at start and end of graph (default false)
+ * @return returns true if no errors occured
+ */
 bool generate_graphml(const bool verbose, RanGenFile& file, const char *ofilename, const bool dummynodes = false) {
     
     int offset = dummynodes ? 0 : 1;
@@ -192,7 +212,18 @@ bool generate_graphml(const bool verbose, RanGenFile& file, const char *ofilenam
     return true;
 }
 
-
+/**
+ * @brief converts Patterson format to format as used in the formulation after Kis et al., Alfiere et al.
+ * @details parses file in Patterson format first, generates then additional times and outputs then data in the structure used by the Kis / Alfieri models' implementations and if desired an additional GraphML file to investigate the network structure. Performs furthermore automatic checks whether given input is a DAG(directed acyclic graph).
+ * 
+ * @param verbose set to true to display additional messages
+ * @param ifilename path to input file
+ * @param ofilename path to output file
+ * @param time_limit controls the maximum deviation release and deadlines can have. Higher values lead to greater time horizon. Default is 10. 
+ * @param dummynodes set to true to ouput dummy nodes at start and end
+ * @param graphml set to true to output additional graphml file to ofilename.graphml
+ * @return true if no errors occured
+ */
 bool generate_output(const bool verbose, const char *ifilename, const char *ofilename, const int time_limit, const bool dummynodes = false, const bool graphml = false) {
     
     
@@ -253,39 +284,34 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
             imaxtime = ::max(imaxtime, file.nodes(i).deadline);
         }
 	maxtime = imaxtime;
-   // maxtime = ::max(time_domain, imaxtime); // yield value to forced value if it makes sense
     
 	if(verbose)cout << "time horizon ist " << maxtime << " periods long" << endl;
-    
 	assert(imaxtime > 0);
 
+    // open output file
     ofstream ofs(ofilename);
     
     if(ofs.bad() || ofs.fail()) {
         cout<<"error: output file could not been opened"<<endl;
         exit(1);
     }
-    //stringstream ofs;
-    
+
     // time
     ofs<<"time = {";
     for(int i = offset; i < maxtime; i++)ofs<<i<<",";
     ofs<<maxtime<<"};"<<endl;
-    
     if(verbose)cout<<"time written..."<<endl;
     
     // activity
     ofs<<"activity = {";
     for(int i = 1; i < activity_count; i++)ofs<<i<<",";
     ofs<<activity_count<<"};"<<endl;
-    
     if(verbose)cout<<"activity written..."<<endl;
     
     // resource
     ofs<<"resource = {";
     for(int i = 1; i < file.resource_count(); i++)ofs<<i<<",";
     ofs<<file.resource_count()<<"};"<<endl;
-    
     if(verbose)cout<<"resource written..."<<endl;
     
     // (overall) resource capacity (constant)
@@ -299,7 +325,6 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
         }
         ofs<<file.resource_availability()[file.resource_count() - 1]<<"]";
         // end print resource availability
-        
         ofs<<",";
     }
     ofs<<"[";
@@ -307,7 +332,6 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
         ofs<<file.resource_availability()[j]<<",";
     }
     ofs<<file.resource_availability()[file.resource_count() - 1]<<"]];"<<endl;
-    
     if(verbose)cout<<"res_capacity written..."<<endl;
     
     // max progress
@@ -320,7 +344,6 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
             if(i != file.node_count() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
-    
     if(verbose)cout<<"maxProgress written..."<<endl;
     
     // min progress
@@ -328,44 +351,39 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     ofs<<"minProgress  = [";
     for(int i = 1; i < activity_count; i++)ofs<<min_progress<<",";
     ofs<<min_progress<<"];"<<endl;
-    
     if(verbose)cout<<"minProgress written..."<<endl;
     
     // print relations
     ofs<<"Relations  = {";
-    
     // print dummy node if desired
     if(dummynodes) {
         for(int j = 0; j < file.node_count(); j++)
                     if(file.get(0, j))ofs<<"<1,"<<(j + 1)<<">,";
     }
-    
-        int curid = dummynodes ? 2 : 1;
-        for(int i =  1; i < file.node_count(); i++) {
-            for(int j = 0; j < file.node_count(); j++) {
-                if(!dummynodes) {
-                    if(j != file.node_count() - 1)  { // print only if not last node
-                        if(file.get(i, j)) {
-                            ofs<<"<"<<curid<<","<<j + 1<<">";
-                        if(curid != activity_count - 1)ofs<<",";
-                        }
-                    }
-                    
-                    
-                }
-                else {
+    int curid = dummynodes ? 2 : 1;
+    for(int i =  1; i < file.node_count(); i++) {
+        for(int j = 0; j < file.node_count(); j++) {
+            if(!dummynodes) {
+                if(j != file.node_count() - 1)  { // print only if not last node
                     if(file.get(i, j)) {
-                        
-                    ofs<<"<"<<curid<<","<<j + 1<<">";
-                  if(curid != activity_count - 1)ofs<<",";
+                        ofs<<"<"<<curid<<","<<j + 1<<">";
+                    if(curid != activity_count - 1)ofs<<",";
                     }
+                }
+                
+                
+            }
+            else {
+                if(file.get(i, j)) {
+                    
+                ofs<<"<"<<curid<<","<<j + 1<<">";
+              if(curid != activity_count - 1)ofs<<",";
                 }
             }
-            curid++;
         }
-    
+        curid++;
+    }
     ofs<<"};"<<endl;
-    
     if(verbose)cout<<"Relations written..."<<endl;
     
     // release
@@ -375,7 +393,6 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
             if(i != file.node_count() - offset - 1)ofs<<",";
         }
     ofs<<"];"<<endl;
-    
     if(verbose)cout<<"release written..."<<endl;
     
     // deadline
@@ -385,7 +402,6 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
         if(i != file.node_count() - offset - 1)ofs<<",";
     }
     ofs<<"];"<<endl;
-    
     if(verbose)cout<<"deadline written..."<<endl;
     
     // res_demand
@@ -402,7 +418,6 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
         if(i != file.node_count() - offset - 1)ofs<<",";
     }
     ofs<<"];"<<endl;
-    
     if(verbose)cout<<"res_demand written..."<<endl;
     if(verbose)cout<<"file successfully converted!"<<endl;
     
@@ -415,9 +430,15 @@ bool generate_output(const bool verbose, const char *ifilename, const char *ofil
     return true;
 }
 
-#define MODE_CHECK 0x2
-#define MODE_REGULAR 0x4
-
+/**
+ * @brief main function
+ * @details contains main loop
+ * 
+ * @param argc number of arguments passed via commandline
+ * @param argv arguments passed to commandline. Note that argv[0] contains the name of the executable
+ * 
+ * @return 0 if no errors occured.
+ */
 int main(int argc, char * argv[]) {
     
     bool verbose = false;       // indicate if program is in verbose mode or not
@@ -487,7 +508,7 @@ int main(int argc, char * argv[]) {
                 
                 break;
         }
-    }while(next_option != -1);
+    } while(next_option != -1);
     
     // check if there is enough arguments left for input / output files
     if(argc - options_used == 1) {

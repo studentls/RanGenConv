@@ -1,0 +1,55 @@
+\hypertarget{helper_8h}{}\section{helper.\+h File Reference}
+\label{helper_8h}\index{helper.\+h@{helper.\+h}}
+{\ttfamily \#include $<$cassert$>$}\\*
+{\ttfamily \#include $<$cstdlib$>$}\\*
+{\ttfamily \#include $<$cmath$>$}\\*
+{\ttfamily \#include $<$cstdio$>$}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$getopt.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{helper_8h_a302a2eac701dc0d38857a6e0bc4cdf14}{drandom} (const double dmin, const double dmax)
+\begin{DoxyCompactList}\small\item\em returns double random variable uniformly distributed on \mbox{[}dmin, dmax\mbox{]} \end{DoxyCompactList}\item 
+int \hyperlink{helper_8h_a2ec3fa28f310ccd6673e2e83e7999b7f}{georv} (const double rate)
+\begin{DoxyCompactList}\small\item\em draw of geometric distributed random variable \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{helper_8h_a302a2eac701dc0d38857a6e0bc4cdf14}{}\index{helper.\+h@{helper.\+h}!drandom@{drandom}}
+\index{drandom@{drandom}!helper.\+h@{helper.\+h}}
+\subsubsection[{drandom}]{\setlength{\rightskip}{0pt plus 5cm}double drandom (
+\begin{DoxyParamCaption}
+\item[{const double}]{dmin, }
+\item[{const double}]{dmax}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{helper_8h_a302a2eac701dc0d38857a6e0bc4cdf14}
+returns double random variables uniformly distributed on \mbox{[}dmin, dmax\mbox{]}
+
+
+\begin{DoxyParams}{Parameters}
+{\em dmin} & lower bound of interval \\
+\hline
+{\em dmax} & upper bound of interval\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+realisation of uniformly distributed random variable on \mbox{[}dmin, dmax\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{helper_8h_a2ec3fa28f310ccd6673e2e83e7999b7f}{}\index{helper.\+h@{helper.\+h}!georv@{georv}}
+\index{georv@{georv}!helper.\+h@{helper.\+h}}
+\subsubsection[{georv}]{\setlength{\rightskip}{0pt plus 5cm}int georv (
+\begin{DoxyParamCaption}
+\item[{const double}]{rate}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{helper_8h_a2ec3fa28f310ccd6673e2e83e7999b7f}
+returns a realisation of a geometric distributed random variable. Note that rate has to be positive.
+
+
+\begin{DoxyParams}{Parameters}
+{\em rate} & rate of the geometric distribution \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+realisation of a geometric distributed random variable 
+\end{DoxyReturn}

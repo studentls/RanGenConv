@@ -12,6 +12,17 @@
 		54F5AEE01A63D43100393E94 /* Graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54F5AEDE1A63D43100393E94 /* Graph.cpp */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		546E672F1A685DFA00FB3051 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		5431CC551A2766E1009C8017 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -27,10 +38,6 @@
 /* Begin PBXFileReference section */
 		5431CC571A2766E1009C8017 /* RanGenConv */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RanGenConv; sourceTree = BUILT_PRODUCTS_DIR; };
 		5431CC5A1A2766E1009C8017 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		5431CC611A2CE989009C8017 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample.txt; sourceTree = "<group>"; };
-		545BC05C1A4F69D2008A548F /* test.rcp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.rcp; sourceTree = "<group>"; };
-		548DDB8D1A5F2C4C003E36F3 /* Pat7.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Pat7.txt; sourceTree = "<group>"; };
-		548DDB8E1A6138E6003E36F3 /* testfile.rcp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = testfile.rcp; sourceTree = "<group>"; };
 		54F5AEDB1A63D35C00393E94 /* RanGenFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RanGenFile.h; sourceTree = "<group>"; };
 		54F5AEDC1A63D36A00393E94 /* RanGenFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RanGenFile.cpp; sourceTree = "<group>"; };
 		54F5AEDE1A63D43100393E94 /* Graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Graph.cpp; sourceTree = "<group>"; };
@@ -68,10 +75,6 @@
 		5431CC591A2766E1009C8017 /* RanGenConv */ = {
 			isa = PBXGroup;
 			children = (
-				548DDB8E1A6138E6003E36F3 /* testfile.rcp */,
-				548DDB8D1A5F2C4C003E36F3 /* Pat7.txt */,
-				545BC05C1A4F69D2008A548F /* test.rcp */,
-				5431CC611A2CE989009C8017 /* sample.txt */,
 				5431CC5A1A2766E1009C8017 /* main.cpp */,
 				54F5AEDB1A63D35C00393E94 /* RanGenFile.h */,
 				54F5AEDC1A63D36A00393E94 /* RanGenFile.cpp */,
@@ -94,6 +97,7 @@
 				5431CC551A2766E1009C8017 /* CopyFiles */,
 			);
 			buildRules = (
+				546E672F1A685DFA00FB3051 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);

@@ -16,10 +16,15 @@
 #include <cassert>
 #include <stdio.h>
 
+/**
+ * @brief stores graph structure as adjacency matrix
+ * @details stores graph structure as adjacency matrix based on unsigned chars. Values > 0 indicate that edge exists.
+ * 
+ */
 class Adjacencymatrix {
 private:
     int num_nodes;
-    unsigned char *adj;
+    unsigned char *adj; 
     
     void clear() {
         if (adj)delete[] adj;
@@ -34,17 +39,37 @@ public:
         clear();
     }
     
+    /**
+     * @brief sets entry in adjacency matrix to val. Positive values of val indicate edge <i, j> is part of edge set.
+     * 
+     * @param i predecessor
+     * @param j successor
+     * @param val 0 indicates <i, j> not part of edge set, values != 0 part of edge set
+     */
     void set(const unsigned int i, const unsigned int j, const unsigned char val) {
         assert(adj);
         assert(0 <= i && 0 <= j && i < num_nodes && j < num_nodes);
         adj[i + j * num_nodes] = val;
     }
     
+    /**
+     * @brief returns positive values if edge <i, j> is contained in edge set
+     * 
+     * @param i predecessor
+     * @param j successor
+     * 
+     * @return positive values if edge <i, h> is part of edge set
+     */
     unsigned char get(const int i, const int j) {
         assert(adj);
         return adj[i + j * num_nodes];
     }
     
+    /**
+     * @brief reserves space for the adjacency matrix
+     * 
+     * @param _num_nodes number of nodes to reserve space for
+     */
     void create(const int _num_nodes) {
         if (adj)clear();
         num_nodes = _num_nodes;
@@ -52,23 +77,17 @@ public:
         for (int i = 0; i < num_nodes * num_nodes; i++)adj[i] = 0;
     }
     
+    /**
+     * @return number of nodes of the representation (not the by edge structure actual implicitly contained ones of the graph)
+     */
     int node_count() { return num_nodes; }
 };
 
-class Edge {
-public:
-    union {
-        struct {
-        int i, j;
-        };
-        struct {
-            int predecessor, successor;
-        };
-    };
-    
-    Edge():i(0), j(0) {}
-};
-
+/**
+ * @brief handles storage of graph structure and assigned data to nodes
+ * @details uses currently an adjacencymatrix for representation of edge structure, an adjancency list might be an alternative. Supports only data assigned to vertices.
+ * @tparam T type of the data assigned to the individual nodes 
+ */
 template<typename T> class Graph {
     T *_vertices; // stores all information regarding nodes
     unsigned int _vertex_count; // number of vertices
@@ -130,6 +149,13 @@ public:
         _vertex_count = 0;
     }
     
+    /**
+     * @brief reserves space to store vertex_count vertices with data
+     * @details reserves space to store vertex_count vertices with data. If called more than one time for the same Graph object, existing data will be deleted and the object be reset
+     * 
+     * @param int [description]
+     * @return [description]
+     */
     bool init(const unsigned int vertex_count) {
         if(_vertices) delete [] _vertices;
         _vertex_count = vertex_count;
@@ -141,7 +167,11 @@ public:
         
     }
     
-    // check if graph is cyclic for given matrix
+    /**
+     * @brief checks if graph is cyclic
+     * @details checks if graph is cyclic by performing a DFS (depth first search). For a DAG (directed acyclic graph) this function should return always false.
+     * @return true if cycle was found, false otherwise.
+     */
     bool isCyclic() {
         bool res = false;
         bool *visited = new bool[_m.node_count()];
@@ -165,7 +195,12 @@ public:
         return res;
     }
     
-    // performs a topological sort and outputs result on a stack
+    /**
+     * @brief performs a topological sort and outputs result on a stack
+     * @details performs a topological sort and outputs result on a stack using a DFS (depth first search).
+     * 
+     * @param Stack C++ STL stack to write order of topological sort. I.e. first/top entry equals the first node which shall be visited.
+     */
     void topologicalSort(std::stack<int>& Stack) {
         
         bool *visited = new bool[vertex_count()];
@@ -182,28 +217,62 @@ public:
     //
     // helper functions
     //
-    // get vertex
+
+    /**
+     * @brief returns refernece to node data for vertex #v
+     * @details returns refernece to node data for vertex #v. Note that this function provides read/write access! Be careful using this reference.
+     * 
+     * @param v index of node to return data for
+     * @return node data of vertex #v
+     */
     T& v(const int v) {
         assert(0 <= v && v < _vertex_count);
         return _vertices[v];
     }
-    // set vertex
+
+    /**
+     * @brief sets node data for vertex #v
+     * @details sets node data for vertex #v.
+     * 
+     * @param v index of node to set data for
+     * @param val node data to set for node #v
+     */
     void set_vertex(const int v, const T& val) {
         assert(_vertices);
         assert(0 <= v && v < _vertex_count);
         _vertices[v] = val;
     }
     
-    // set edge
+    /**
+     * @brief adds or removes edge <i, j> to edge set
+     * @details adds or removes edge <i, j> to edge set. Note that indices start with 0. I.e. valid values for i, j are 0,...,vertex_count-1
+     * 
+     * @param i predecessor 
+     * @param j successor
+     * @param val positive value will add the edge <i, j> to the edge set, 0 remove.
+     */
     void set(const int i, const int j, const unsigned char val) {
         assert(validIndex(i) && validIndex(j));
         _m.set(i, j, val);
     }
-    // get edge
+    /**
+     * @brief returns whether edge belongs to edge set or not
+     * @details whether edge belongs to edge set or not. Positive values indicate edge belongs to edge set.
+     * 
+     * @param i predecessor
+     * @param j successor
+     * 
+     * @return positive values mean edge belongs to edge set, 0 otherwise not.
+     */
     unsigned char get(const int i, const int j) {
         assert(validIndex(i) && validIndex(j));
         return _m.get(i, j);
     }
+
+    /**
+     * @brief returns information on number of vertices of graph
+     * @return number of nodes, vertices respectively of the graph
+     */
     unsigned int vertex_count() {return _vertex_count;}
     
 };

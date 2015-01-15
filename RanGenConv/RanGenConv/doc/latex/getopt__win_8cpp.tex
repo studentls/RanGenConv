@@ -1,0 +1,283 @@
+\hypertarget{getopt__win_8cpp}{}\section{getopt\+\_\+win.\+cpp File Reference}
+\label{getopt__win_8cpp}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$malloc.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}getopt\+\_\+win.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct {\bfseries \+\_\+getopt\+\_\+data\+\_\+a}
+\item 
+struct {\bfseries \+\_\+getopt\+\_\+data\+\_\+w}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{getopt__win_8cpp_af08ec37a8c99d747fb60fa15bc28678b}{\+\_\+\+C\+R\+T\+\_\+\+S\+E\+C\+U\+R\+E\+\_\+\+N\+O\+\_\+\+W\+A\+R\+N\+I\+N\+G\+S}
+\item 
+\#define \hyperlink{getopt__win_8cpp_a0e1f57718084987510b18a3ec12e9f39}{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347}{E\+N\+U\+M\+\_\+\+O\+R\+D\+E\+R\+I\+N\+G} \{ \hyperlink{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347a0e73a0691c110b1442d8364d1d12eccc}{R\+E\+Q\+U\+I\+R\+E\+\_\+\+O\+R\+D\+E\+R}, 
+\hyperlink{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347acfdde4b47c27f4efbd832e1ac7f8a8fc}{P\+E\+R\+M\+U\+T\+E}, 
+\hyperlink{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347a3c56550bfafe809d9214b863b69c31c5}{R\+E\+T\+U\+R\+N\+\_\+\+I\+N\+\_\+\+O\+R\+D\+E\+R}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{getopt__win_8cpp_aeb70649197728072a457fa359e277f66}{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+a} (int argc, char $\ast$const $\ast$argv, const char $\ast$optstring, const struct \hyperlink{structoption__a}{option\+\_\+a} $\ast$longopts, int $\ast$longind, int long\+\_\+only, struct \+\_\+getopt\+\_\+data\+\_\+a $\ast$d, int posixly\+\_\+correct)
+\item 
+int \hyperlink{getopt__win_8cpp_a8c8d04b97557a3bea0691284add46f31}{\+\_\+getopt\+\_\+internal\+\_\+a} (int argc, char $\ast$const $\ast$argv, const char $\ast$optstring, const struct \hyperlink{structoption__a}{option\+\_\+a} $\ast$longopts, int $\ast$longind, int long\+\_\+only, int posixly\+\_\+correct)
+\item 
+int \hyperlink{getopt__win_8cpp_aab15fd50dca216d9bd593dc8e92ee002}{getopt\+\_\+a} (int argc, char $\ast$const $\ast$argv, const char $\ast$optstring) \hyperlink{getopt__win_8h_a0e1f57718084987510b18a3ec12e9f39}{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}
+\item 
+int \hyperlink{getopt__win_8cpp_a81750951a01eda0d8d65de1acf14630e}{getopt\+\_\+long\+\_\+a} (int argc, char $\ast$const $\ast$argv, const char $\ast$options, const struct \hyperlink{structoption__a}{option\+\_\+a} $\ast$\hyperlink{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{long\+\_\+options}, int $\ast$opt\+\_\+index) \hyperlink{getopt__win_8h_a0e1f57718084987510b18a3ec12e9f39}{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}
+\item 
+int \hyperlink{getopt__win_8cpp_a53316778cf236ddb24bd48a58090c540}{getopt\+\_\+long\+\_\+only\+\_\+a} (int argc, char $\ast$const $\ast$argv, const char $\ast$options, const struct \hyperlink{structoption__a}{option\+\_\+a} $\ast$\hyperlink{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{long\+\_\+options}, int $\ast$opt\+\_\+index) \hyperlink{getopt__win_8h_a0e1f57718084987510b18a3ec12e9f39}{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}
+\item 
+int \hyperlink{getopt__win_8cpp_ac385cc4e868f2fda7fef93a882141f73}{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+a} (int argc, char $\ast$const $\ast$argv, const char $\ast$options, const struct \hyperlink{structoption__a}{option\+\_\+a} $\ast$\hyperlink{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{long\+\_\+options}, int $\ast$opt\+\_\+index, struct \+\_\+getopt\+\_\+data\+\_\+a $\ast$d)
+\item 
+int \hyperlink{getopt__win_8cpp_a7e6c6af1407d858a705c550f8cda8783}{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+a} (int argc, char $\ast$const $\ast$argv, const char $\ast$options, const struct \hyperlink{structoption__a}{option\+\_\+a} $\ast$\hyperlink{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{long\+\_\+options}, int $\ast$opt\+\_\+index, struct \+\_\+getopt\+\_\+data\+\_\+a $\ast$d)
+\item 
+int \hyperlink{getopt__win_8cpp_a7a370e6af5af84eb53fba51802c5595c}{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+w} (int argc, wchar\+\_\+t $\ast$const $\ast$argv, const wchar\+\_\+t $\ast$optstring, const struct \hyperlink{structoption__w}{option\+\_\+w} $\ast$longopts, int $\ast$longind, int long\+\_\+only, struct \+\_\+getopt\+\_\+data\+\_\+w $\ast$d, int posixly\+\_\+correct)
+\item 
+int \hyperlink{getopt__win_8cpp_afce3aa274c9363dd4a9f028486fb011f}{\+\_\+getopt\+\_\+internal\+\_\+w} (int argc, wchar\+\_\+t $\ast$const $\ast$argv, const wchar\+\_\+t $\ast$optstring, const struct \hyperlink{structoption__w}{option\+\_\+w} $\ast$longopts, int $\ast$longind, int long\+\_\+only, int posixly\+\_\+correct)
+\item 
+int \hyperlink{getopt__win_8cpp_a3f396a0ea9178e13cd4d401121937230}{getopt\+\_\+w} (int argc, wchar\+\_\+t $\ast$const $\ast$argv, const wchar\+\_\+t $\ast$optstring) \hyperlink{getopt__win_8h_a0e1f57718084987510b18a3ec12e9f39}{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}
+\item 
+int \hyperlink{getopt__win_8cpp_a4bf625b8d4e55e13fb0fdaf9b715fe34}{getopt\+\_\+long\+\_\+w} (int argc, wchar\+\_\+t $\ast$const $\ast$argv, const wchar\+\_\+t $\ast$options, const struct \hyperlink{structoption__w}{option\+\_\+w} $\ast$\hyperlink{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{long\+\_\+options}, int $\ast$opt\+\_\+index) \hyperlink{getopt__win_8h_a0e1f57718084987510b18a3ec12e9f39}{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}
+\item 
+int \hyperlink{getopt__win_8cpp_aae5473eb6aa4cf987b1ab3ea267f4d95}{getopt\+\_\+long\+\_\+only\+\_\+w} (int argc, wchar\+\_\+t $\ast$const $\ast$argv, const wchar\+\_\+t $\ast$options, const struct \hyperlink{structoption__w}{option\+\_\+w} $\ast$\hyperlink{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{long\+\_\+options}, int $\ast$opt\+\_\+index) \hyperlink{getopt__win_8h_a0e1f57718084987510b18a3ec12e9f39}{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}
+\item 
+int \hyperlink{getopt__win_8cpp_a4685bbbe9463e8d013ca87b39bd54a57}{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+w} (int argc, wchar\+\_\+t $\ast$const $\ast$argv, const wchar\+\_\+t $\ast$options, const struct \hyperlink{structoption__w}{option\+\_\+w} $\ast$\hyperlink{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{long\+\_\+options}, int $\ast$opt\+\_\+index, struct \+\_\+getopt\+\_\+data\+\_\+w $\ast$d)
+\item 
+int \hyperlink{getopt__win_8cpp_af6ac884269e397dabfec72a66cb943bc}{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+w} (int argc, wchar\+\_\+t $\ast$const $\ast$argv, const wchar\+\_\+t $\ast$options, const struct \hyperlink{structoption__w}{option\+\_\+w} $\ast$\hyperlink{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{long\+\_\+options}, int $\ast$opt\+\_\+index, struct \+\_\+getopt\+\_\+data\+\_\+w $\ast$d)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{getopt__win_8cpp_ad5e1c16213bbee2d5e8cc363309f418c}{optind} = 1
+\item 
+int \hyperlink{getopt__win_8cpp_ae30f05ee1e2e5652f174a35c7875d25e}{opterr} = 1
+\item 
+int \hyperlink{getopt__win_8cpp_a475b8db98445da73e5f62a1ef6324b95}{optopt} = \textquotesingle{}?\textquotesingle{}
+\item 
+char $\ast$ \hyperlink{getopt__win_8cpp_af2dba0020be24ca989548857625110d6}{optarg\+\_\+a}
+\item 
+wchar\+\_\+t $\ast$ \hyperlink{getopt__win_8cpp_a10f38b343501001d68bda3e7884c3f1f}{optarg\+\_\+w}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{getopt__win_8cpp_af08ec37a8c99d747fb60fa15bc28678b}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+\+C\+R\+T\+\_\+\+S\+E\+C\+U\+R\+E\+\_\+\+N\+O\+\_\+\+W\+A\+R\+N\+I\+N\+G\+S@{\+\_\+\+C\+R\+T\+\_\+\+S\+E\+C\+U\+R\+E\+\_\+\+N\+O\+\_\+\+W\+A\+R\+N\+I\+N\+G\+S}}
+\index{\+\_\+\+C\+R\+T\+\_\+\+S\+E\+C\+U\+R\+E\+\_\+\+N\+O\+\_\+\+W\+A\+R\+N\+I\+N\+G\+S@{\+\_\+\+C\+R\+T\+\_\+\+S\+E\+C\+U\+R\+E\+\_\+\+N\+O\+\_\+\+W\+A\+R\+N\+I\+N\+G\+S}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+\+C\+R\+T\+\_\+\+S\+E\+C\+U\+R\+E\+\_\+\+N\+O\+\_\+\+W\+A\+R\+N\+I\+N\+G\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+C\+R\+T\+\_\+\+S\+E\+C\+U\+R\+E\+\_\+\+N\+O\+\_\+\+W\+A\+R\+N\+I\+N\+G\+S}\label{getopt__win_8cpp_af08ec37a8c99d747fb60fa15bc28678b}
+\hypertarget{getopt__win_8cpp_a0e1f57718084987510b18a3ec12e9f39}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W@{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}}
+\index{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W@{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+G\+E\+T\+O\+P\+T\+\_\+\+T\+H\+R\+O\+W}\label{getopt__win_8cpp_a0e1f57718084987510b18a3ec12e9f39}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!E\+N\+U\+M\+\_\+\+O\+R\+D\+E\+R\+I\+N\+G@{E\+N\+U\+M\+\_\+\+O\+R\+D\+E\+R\+I\+N\+G}}
+\index{E\+N\+U\+M\+\_\+\+O\+R\+D\+E\+R\+I\+N\+G@{E\+N\+U\+M\+\_\+\+O\+R\+D\+E\+R\+I\+N\+G}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{E\+N\+U\+M\+\_\+\+O\+R\+D\+E\+R\+I\+N\+G}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf E\+N\+U\+M\+\_\+\+O\+R\+D\+E\+R\+I\+N\+G}}\label{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{R\+E\+Q\+U\+I\+R\+E\+\_\+\+O\+R\+D\+E\+R@{R\+E\+Q\+U\+I\+R\+E\+\_\+\+O\+R\+D\+E\+R}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!R\+E\+Q\+U\+I\+R\+E\+\_\+\+O\+R\+D\+E\+R@{R\+E\+Q\+U\+I\+R\+E\+\_\+\+O\+R\+D\+E\+R}}\item[{\em 
+\hypertarget{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347a0e73a0691c110b1442d8364d1d12eccc}{}R\+E\+Q\+U\+I\+R\+E\+\_\+\+O\+R\+D\+E\+R\label{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347a0e73a0691c110b1442d8364d1d12eccc}
+}]\index{P\+E\+R\+M\+U\+T\+E@{P\+E\+R\+M\+U\+T\+E}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!P\+E\+R\+M\+U\+T\+E@{P\+E\+R\+M\+U\+T\+E}}\item[{\em 
+\hypertarget{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347acfdde4b47c27f4efbd832e1ac7f8a8fc}{}P\+E\+R\+M\+U\+T\+E\label{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347acfdde4b47c27f4efbd832e1ac7f8a8fc}
+}]\index{R\+E\+T\+U\+R\+N\+\_\+\+I\+N\+\_\+\+O\+R\+D\+E\+R@{R\+E\+T\+U\+R\+N\+\_\+\+I\+N\+\_\+\+O\+R\+D\+E\+R}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!R\+E\+T\+U\+R\+N\+\_\+\+I\+N\+\_\+\+O\+R\+D\+E\+R@{R\+E\+T\+U\+R\+N\+\_\+\+I\+N\+\_\+\+O\+R\+D\+E\+R}}\item[{\em 
+\hypertarget{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347a3c56550bfafe809d9214b863b69c31c5}{}R\+E\+T\+U\+R\+N\+\_\+\+I\+N\+\_\+\+O\+R\+D\+E\+R\label{getopt__win_8cpp_aa52faa17a41970fda6e68b8c70368347a3c56550bfafe809d9214b863b69c31c5}
+}]\end{description}
+\end{Desc}
+
+
+\subsection{Function Documentation}
+\hypertarget{getopt__win_8cpp_a8c8d04b97557a3bea0691284add46f31}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+getopt\+\_\+internal\+\_\+a@{\+\_\+getopt\+\_\+internal\+\_\+a}}
+\index{\+\_\+getopt\+\_\+internal\+\_\+a@{\+\_\+getopt\+\_\+internal\+\_\+a}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+getopt\+\_\+internal\+\_\+a}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+getopt\+\_\+internal\+\_\+a (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$const $\ast$}]{argv, }
+\item[{const char $\ast$}]{optstring, }
+\item[{const struct {\bf option\+\_\+a} $\ast$}]{longopts, }
+\item[{int $\ast$}]{longind, }
+\item[{int}]{long\+\_\+only, }
+\item[{int}]{posixly\+\_\+correct}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_a8c8d04b97557a3bea0691284add46f31}
+\hypertarget{getopt__win_8cpp_aeb70649197728072a457fa359e277f66}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+a@{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+a}}
+\index{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+a@{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+a}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+a}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+getopt\+\_\+internal\+\_\+r\+\_\+a (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$const $\ast$}]{argv, }
+\item[{const char $\ast$}]{optstring, }
+\item[{const struct {\bf option\+\_\+a} $\ast$}]{longopts, }
+\item[{int $\ast$}]{longind, }
+\item[{int}]{long\+\_\+only, }
+\item[{struct \+\_\+getopt\+\_\+data\+\_\+a $\ast$}]{d, }
+\item[{int}]{posixly\+\_\+correct}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_aeb70649197728072a457fa359e277f66}
+\hypertarget{getopt__win_8cpp_a7a370e6af5af84eb53fba51802c5595c}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+w@{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+w}}
+\index{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+w@{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+w}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+getopt\+\_\+internal\+\_\+r\+\_\+w}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+getopt\+\_\+internal\+\_\+r\+\_\+w (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{wchar\+\_\+t $\ast$const $\ast$}]{argv, }
+\item[{const wchar\+\_\+t $\ast$}]{optstring, }
+\item[{const struct {\bf option\+\_\+w} $\ast$}]{longopts, }
+\item[{int $\ast$}]{longind, }
+\item[{int}]{long\+\_\+only, }
+\item[{struct \+\_\+getopt\+\_\+data\+\_\+w $\ast$}]{d, }
+\item[{int}]{posixly\+\_\+correct}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_a7a370e6af5af84eb53fba51802c5595c}
+\hypertarget{getopt__win_8cpp_afce3aa274c9363dd4a9f028486fb011f}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+getopt\+\_\+internal\+\_\+w@{\+\_\+getopt\+\_\+internal\+\_\+w}}
+\index{\+\_\+getopt\+\_\+internal\+\_\+w@{\+\_\+getopt\+\_\+internal\+\_\+w}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+getopt\+\_\+internal\+\_\+w}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+getopt\+\_\+internal\+\_\+w (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{wchar\+\_\+t $\ast$const $\ast$}]{argv, }
+\item[{const wchar\+\_\+t $\ast$}]{optstring, }
+\item[{const struct {\bf option\+\_\+w} $\ast$}]{longopts, }
+\item[{int $\ast$}]{longind, }
+\item[{int}]{long\+\_\+only, }
+\item[{int}]{posixly\+\_\+correct}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_afce3aa274c9363dd4a9f028486fb011f}
+\hypertarget{getopt__win_8cpp_a7e6c6af1407d858a705c550f8cda8783}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+a@{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+a}}
+\index{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+a@{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+a}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+a}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+a (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$const $\ast$}]{argv, }
+\item[{const char $\ast$}]{options, }
+\item[{const struct {\bf option\+\_\+a} $\ast$}]{long\+\_\+options, }
+\item[{int $\ast$}]{opt\+\_\+index, }
+\item[{struct \+\_\+getopt\+\_\+data\+\_\+a $\ast$}]{d}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_a7e6c6af1407d858a705c550f8cda8783}
+\hypertarget{getopt__win_8cpp_af6ac884269e397dabfec72a66cb943bc}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+w@{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+w}}
+\index{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+w@{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+w}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+w}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+getopt\+\_\+long\+\_\+only\+\_\+r\+\_\+w (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{wchar\+\_\+t $\ast$const $\ast$}]{argv, }
+\item[{const wchar\+\_\+t $\ast$}]{options, }
+\item[{const struct {\bf option\+\_\+w} $\ast$}]{long\+\_\+options, }
+\item[{int $\ast$}]{opt\+\_\+index, }
+\item[{struct \+\_\+getopt\+\_\+data\+\_\+w $\ast$}]{d}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_af6ac884269e397dabfec72a66cb943bc}
+\hypertarget{getopt__win_8cpp_ac385cc4e868f2fda7fef93a882141f73}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+getopt\+\_\+long\+\_\+r\+\_\+a@{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+a}}
+\index{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+a@{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+a}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+a}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+getopt\+\_\+long\+\_\+r\+\_\+a (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$const $\ast$}]{argv, }
+\item[{const char $\ast$}]{options, }
+\item[{const struct {\bf option\+\_\+a} $\ast$}]{long\+\_\+options, }
+\item[{int $\ast$}]{opt\+\_\+index, }
+\item[{struct \+\_\+getopt\+\_\+data\+\_\+a $\ast$}]{d}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_ac385cc4e868f2fda7fef93a882141f73}
+\hypertarget{getopt__win_8cpp_a4685bbbe9463e8d013ca87b39bd54a57}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!\+\_\+getopt\+\_\+long\+\_\+r\+\_\+w@{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+w}}
+\index{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+w@{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+w}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{\+\_\+getopt\+\_\+long\+\_\+r\+\_\+w}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+getopt\+\_\+long\+\_\+r\+\_\+w (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{wchar\+\_\+t $\ast$const $\ast$}]{argv, }
+\item[{const wchar\+\_\+t $\ast$}]{options, }
+\item[{const struct {\bf option\+\_\+w} $\ast$}]{long\+\_\+options, }
+\item[{int $\ast$}]{opt\+\_\+index, }
+\item[{struct \+\_\+getopt\+\_\+data\+\_\+w $\ast$}]{d}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_a4685bbbe9463e8d013ca87b39bd54a57}
+\hypertarget{getopt__win_8cpp_aab15fd50dca216d9bd593dc8e92ee002}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!getopt\+\_\+a@{getopt\+\_\+a}}
+\index{getopt\+\_\+a@{getopt\+\_\+a}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{getopt\+\_\+a}]{\setlength{\rightskip}{0pt plus 5cm}int getopt\+\_\+a (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$const $\ast$}]{argv, }
+\item[{const char $\ast$}]{optstring}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_aab15fd50dca216d9bd593dc8e92ee002}
+\hypertarget{getopt__win_8cpp_a81750951a01eda0d8d65de1acf14630e}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!getopt\+\_\+long\+\_\+a@{getopt\+\_\+long\+\_\+a}}
+\index{getopt\+\_\+long\+\_\+a@{getopt\+\_\+long\+\_\+a}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{getopt\+\_\+long\+\_\+a}]{\setlength{\rightskip}{0pt plus 5cm}int getopt\+\_\+long\+\_\+a (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$const $\ast$}]{argv, }
+\item[{const char $\ast$}]{options, }
+\item[{const struct {\bf option\+\_\+a} $\ast$}]{long\+\_\+options, }
+\item[{int $\ast$}]{opt\+\_\+index}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_a81750951a01eda0d8d65de1acf14630e}
+\hypertarget{getopt__win_8cpp_a53316778cf236ddb24bd48a58090c540}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!getopt\+\_\+long\+\_\+only\+\_\+a@{getopt\+\_\+long\+\_\+only\+\_\+a}}
+\index{getopt\+\_\+long\+\_\+only\+\_\+a@{getopt\+\_\+long\+\_\+only\+\_\+a}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{getopt\+\_\+long\+\_\+only\+\_\+a}]{\setlength{\rightskip}{0pt plus 5cm}int getopt\+\_\+long\+\_\+only\+\_\+a (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$const $\ast$}]{argv, }
+\item[{const char $\ast$}]{options, }
+\item[{const struct {\bf option\+\_\+a} $\ast$}]{long\+\_\+options, }
+\item[{int $\ast$}]{opt\+\_\+index}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_a53316778cf236ddb24bd48a58090c540}
+\hypertarget{getopt__win_8cpp_aae5473eb6aa4cf987b1ab3ea267f4d95}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!getopt\+\_\+long\+\_\+only\+\_\+w@{getopt\+\_\+long\+\_\+only\+\_\+w}}
+\index{getopt\+\_\+long\+\_\+only\+\_\+w@{getopt\+\_\+long\+\_\+only\+\_\+w}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{getopt\+\_\+long\+\_\+only\+\_\+w}]{\setlength{\rightskip}{0pt plus 5cm}int getopt\+\_\+long\+\_\+only\+\_\+w (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{wchar\+\_\+t $\ast$const $\ast$}]{argv, }
+\item[{const wchar\+\_\+t $\ast$}]{options, }
+\item[{const struct {\bf option\+\_\+w} $\ast$}]{long\+\_\+options, }
+\item[{int $\ast$}]{opt\+\_\+index}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_aae5473eb6aa4cf987b1ab3ea267f4d95}
+\hypertarget{getopt__win_8cpp_a4bf625b8d4e55e13fb0fdaf9b715fe34}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!getopt\+\_\+long\+\_\+w@{getopt\+\_\+long\+\_\+w}}
+\index{getopt\+\_\+long\+\_\+w@{getopt\+\_\+long\+\_\+w}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{getopt\+\_\+long\+\_\+w}]{\setlength{\rightskip}{0pt plus 5cm}int getopt\+\_\+long\+\_\+w (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{wchar\+\_\+t $\ast$const $\ast$}]{argv, }
+\item[{const wchar\+\_\+t $\ast$}]{options, }
+\item[{const struct {\bf option\+\_\+w} $\ast$}]{long\+\_\+options, }
+\item[{int $\ast$}]{opt\+\_\+index}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_a4bf625b8d4e55e13fb0fdaf9b715fe34}
+\hypertarget{getopt__win_8cpp_a3f396a0ea9178e13cd4d401121937230}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!getopt\+\_\+w@{getopt\+\_\+w}}
+\index{getopt\+\_\+w@{getopt\+\_\+w}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{getopt\+\_\+w}]{\setlength{\rightskip}{0pt plus 5cm}int getopt\+\_\+w (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{wchar\+\_\+t $\ast$const $\ast$}]{argv, }
+\item[{const wchar\+\_\+t $\ast$}]{optstring}
+\end{DoxyParamCaption}
+)}\label{getopt__win_8cpp_a3f396a0ea9178e13cd4d401121937230}
+
+
+\subsection{Variable Documentation}
+\hypertarget{getopt__win_8cpp_af2dba0020be24ca989548857625110d6}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!optarg\+\_\+a@{optarg\+\_\+a}}
+\index{optarg\+\_\+a@{optarg\+\_\+a}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{optarg\+\_\+a}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ optarg\+\_\+a}\label{getopt__win_8cpp_af2dba0020be24ca989548857625110d6}
+\hypertarget{getopt__win_8cpp_a10f38b343501001d68bda3e7884c3f1f}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!optarg\+\_\+w@{optarg\+\_\+w}}
+\index{optarg\+\_\+w@{optarg\+\_\+w}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{optarg\+\_\+w}]{\setlength{\rightskip}{0pt plus 5cm}wchar\+\_\+t$\ast$ optarg\+\_\+w}\label{getopt__win_8cpp_a10f38b343501001d68bda3e7884c3f1f}
+\hypertarget{getopt__win_8cpp_ae30f05ee1e2e5652f174a35c7875d25e}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!opterr@{opterr}}
+\index{opterr@{opterr}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{opterr}]{\setlength{\rightskip}{0pt plus 5cm}int opterr = 1}\label{getopt__win_8cpp_ae30f05ee1e2e5652f174a35c7875d25e}
+\hypertarget{getopt__win_8cpp_ad5e1c16213bbee2d5e8cc363309f418c}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!optind@{optind}}
+\index{optind@{optind}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{optind}]{\setlength{\rightskip}{0pt plus 5cm}int optind = 1}\label{getopt__win_8cpp_ad5e1c16213bbee2d5e8cc363309f418c}
+\hypertarget{getopt__win_8cpp_a475b8db98445da73e5f62a1ef6324b95}{}\index{getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}!optopt@{optopt}}
+\index{optopt@{optopt}!getopt\+\_\+win.\+cpp@{getopt\+\_\+win.\+cpp}}
+\subsubsection[{optopt}]{\setlength{\rightskip}{0pt plus 5cm}int optopt = \textquotesingle{}?\textquotesingle{}}\label{getopt__win_8cpp_a475b8db98445da73e5f62a1ef6324b95}

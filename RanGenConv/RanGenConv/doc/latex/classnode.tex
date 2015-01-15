@@ -1,0 +1,75 @@
+\hypertarget{classnode}{}\section{node Class Reference}
+\label{classnode}\index{node@{node}}
+
+
+struct to hold one data line of the patterson format  
+
+
+
+
+{\ttfamily \#include $<$Ran\+Gen\+File.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classnode_a82669b7358b50bd8d7888d7df4ff8dfa}{node} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classnode_a8ceaa10e39f74fdfdae30c68a50074e2}{id}
+\item 
+int \hyperlink{classnode_aaf1da6e3f459a2e0c1dc2f961302b9f7}{activity\+\_\+duration}
+\item 
+std\+::vector$<$ int $>$ \hyperlink{classnode_a34b5f0e866924cecdda4165b565ea571}{resource\+\_\+requirements}
+\item 
+int \hyperlink{classnode_a2e9517cedd7c74a4457a051eb8052f20}{num\+\_\+successors}
+\item 
+std\+::vector$<$ int $>$ \hyperlink{classnode_a8ee984c8aeb539ee4d0cf783b446e6db}{children}
+\item 
+int \hyperlink{classnode_a7c1bb8ed64a6dd9c79de878e364d5456}{release}
+\item 
+int \hyperlink{classnode_ae5efb113f01f63fe487d29053a55275a}{deadline}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+struct to hold one data line of the patterson format. Is used as assigned data to a node. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classnode_a82669b7358b50bd8d7888d7df4ff8dfa}{}\index{node@{node}!node@{node}}
+\index{node@{node}!node@{node}}
+\subsubsection[{node}]{\setlength{\rightskip}{0pt plus 5cm}node\+::node (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classnode_a82669b7358b50bd8d7888d7df4ff8dfa}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classnode_aaf1da6e3f459a2e0c1dc2f961302b9f7}{}\index{node@{node}!activity\+\_\+duration@{activity\+\_\+duration}}
+\index{activity\+\_\+duration@{activity\+\_\+duration}!node@{node}}
+\subsubsection[{activity\+\_\+duration}]{\setlength{\rightskip}{0pt plus 5cm}int node\+::activity\+\_\+duration}\label{classnode_aaf1da6e3f459a2e0c1dc2f961302b9f7}
+duration of a activit, equals 1.\+0 / maxprogress \hypertarget{classnode_a8ee984c8aeb539ee4d0cf783b446e6db}{}\index{node@{node}!children@{children}}
+\index{children@{children}!node@{node}}
+\subsubsection[{children}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$int$>$ node\+::children}\label{classnode_a8ee984c8aeb539ee4d0cf783b446e6db}
+chidlren, indexing starts with 1 \hypertarget{classnode_ae5efb113f01f63fe487d29053a55275a}{}\index{node@{node}!deadline@{deadline}}
+\index{deadline@{deadline}!node@{node}}
+\subsubsection[{deadline}]{\setlength{\rightskip}{0pt plus 5cm}int node\+::deadline}\label{classnode_ae5efb113f01f63fe487d29053a55275a}
+\hypertarget{classnode_a8ceaa10e39f74fdfdae30c68a50074e2}{}\index{node@{node}!id@{id}}
+\index{id@{id}!node@{node}}
+\subsubsection[{id}]{\setlength{\rightskip}{0pt plus 5cm}int node\+::id}\label{classnode_a8ceaa10e39f74fdfdae30c68a50074e2}
+min, max are the dummynodes --$>$ starts with 1 \hypertarget{classnode_a2e9517cedd7c74a4457a051eb8052f20}{}\index{node@{node}!num\+\_\+successors@{num\+\_\+successors}}
+\index{num\+\_\+successors@{num\+\_\+successors}!node@{node}}
+\subsubsection[{num\+\_\+successors}]{\setlength{\rightskip}{0pt plus 5cm}int node\+::num\+\_\+successors}\label{classnode_a2e9517cedd7c74a4457a051eb8052f20}
+number of successors \hypertarget{classnode_a7c1bb8ed64a6dd9c79de878e364d5456}{}\index{node@{node}!release@{release}}
+\index{release@{release}!node@{node}}
+\subsubsection[{release}]{\setlength{\rightskip}{0pt plus 5cm}int node\+::release}\label{classnode_a7c1bb8ed64a6dd9c79de878e364d5456}
+\hypertarget{classnode_a34b5f0e866924cecdda4165b565ea571}{}\index{node@{node}!resource\+\_\+requirements@{resource\+\_\+requirements}}
+\index{resource\+\_\+requirements@{resource\+\_\+requirements}!node@{node}}
+\subsubsection[{resource\+\_\+requirements}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$int$>$ node\+::resource\+\_\+requirements}\label{classnode_a34b5f0e866924cecdda4165b565ea571}
+resource requirements of an acitivity 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_ran_gen_file_8h}{Ran\+Gen\+File.\+h}\end{DoxyCompactItemize}

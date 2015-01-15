@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>57B09B04-2CB7-4D59-8E85-79393C3FDE04</string>
+	<key>IDESourceControlProjectName</key>
+	<string>RanGenConv</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>D4E371D509259589F9E5901C9A804A89121BEB23</key>
+		<string>https://github.com/studentls/RanGenConv.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>RanGenConv/RanGenConv.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>D4E371D509259589F9E5901C9A804A89121BEB23</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/studentls/RanGenConv.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D4E371D509259589F9E5901C9A804A89121BEB23</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D4E371D509259589F9E5901C9A804A89121BEB23</string>
+			<key>IDESourceControlWCCName</key>
+			<string>RanGenConv</string>
+		</dict>
+	</array>
+</dict>
+</plist>

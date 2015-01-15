@@ -1,0 +1,216 @@
+\hypertarget{main_8cpp}{}\section{main.\+cpp File Reference}
+\label{main_8cpp}\index{main.\+cpp@{main.\+cpp}}
+{\ttfamily \#include \char`\"{}Ran\+Gen\+File.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Graph.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}helper.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$cassert$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$stack$>$}\\*
+{\ttfamily \#include $<$fstream$>$}\\*
+{\ttfamily \#include $<$sstream$>$}\\*
+{\ttfamily \#include $<$string$>$}\\*
+{\ttfamily \#include $<$ctime$>$}\\*
+{\ttfamily \#include $<$cmath$>$}\\*
+{\ttfamily \#include $<$cstring$>$}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{main_8cpp_a04b254126af7e934b608d6fc4f570518}{M\+O\+D\+E\+\_\+\+C\+H\+E\+C\+K}~0x2
+\item 
+\#define \hyperlink{main_8cpp_a3cfff774e983fd021cd6b50b3e8e867a}{M\+O\+D\+E\+\_\+\+R\+E\+G\+U\+L\+A\+R}~0x4
+\item 
+\#define \hyperlink{main_8cpp_a256a5721249aa3309437212cc21a9fe4}{P\+A\+T\+H\+\_\+\+S\+E\+P\+A\+R\+A\+T\+O\+R}~\char`\"{}/\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{main_8cpp_a0f6f70ca2e3cf9ba956354b025dbac05}{print\+\_\+usage} (F\+I\+L\+E $\ast$stream, int exit\+\_\+code)
+\begin{DoxyCompactList}\small\item\em diplays help message \end{DoxyCompactList}\item 
+bool \hyperlink{main_8cpp_a7cec9f4f9ebd175d0659ca6af28407a5}{exists\+\_\+file} (const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em helper func to check if file exists \end{DoxyCompactList}\item 
+bool \hyperlink{main_8cpp_a273902d18eb17be4eb9040ee099ad9f1}{writable\+\_\+file} (const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em helper func to check if file can be written \end{DoxyCompactList}\item 
+bool \hyperlink{main_8cpp_a0fd3296629ea14da96a5b0aedd4193c3}{generate\+\_\+graphml} (const bool verbose, \hyperlink{class_ran_gen_file}{Ran\+Gen\+File} \&file, const char $\ast$ofilename, const bool dummynodes=false)
+\begin{DoxyCompactList}\small\item\em generates for given \hyperlink{class_ran_gen_file}{Ran\+Gen\+File} graphml output \end{DoxyCompactList}\item 
+bool \hyperlink{main_8cpp_a50f37e5a6eb9900fdb5c5657c18d5883}{generate\+\_\+output} (const bool verbose, const char $\ast$ifilename, const char $\ast$ofilename, const int time\+\_\+limit, const bool dummynodes=false, const bool graphml=false)
+\begin{DoxyCompactList}\small\item\em converts Patterson format to format as used in the formulation after Kis et al., Alfiere et al. \end{DoxyCompactList}\item 
+int \hyperlink{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em main function \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{main_8cpp_ad415aa777d9477e7aaa696e53f36491a}{program\+\_\+name}
+\item 
+const char $\ast$const \hyperlink{main_8cpp_adeeb19e806939f82914ee4867ea11bab}{short\+\_\+options} = \char`\"{}hc\+:vgdt\+:\char`\"{}
+\item 
+const struct \hyperlink{getopt__win_8h_adf33c342f1f93d3574188740b6d00a59}{option} \hyperlink{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{long\+\_\+options} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{main_8cpp_a04b254126af7e934b608d6fc4f570518}{}\index{main.\+cpp@{main.\+cpp}!M\+O\+D\+E\+\_\+\+C\+H\+E\+C\+K@{M\+O\+D\+E\+\_\+\+C\+H\+E\+C\+K}}
+\index{M\+O\+D\+E\+\_\+\+C\+H\+E\+C\+K@{M\+O\+D\+E\+\_\+\+C\+H\+E\+C\+K}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{M\+O\+D\+E\+\_\+\+C\+H\+E\+C\+K}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+O\+D\+E\+\_\+\+C\+H\+E\+C\+K~0x2}\label{main_8cpp_a04b254126af7e934b608d6fc4f570518}
+\hypertarget{main_8cpp_a3cfff774e983fd021cd6b50b3e8e867a}{}\index{main.\+cpp@{main.\+cpp}!M\+O\+D\+E\+\_\+\+R\+E\+G\+U\+L\+A\+R@{M\+O\+D\+E\+\_\+\+R\+E\+G\+U\+L\+A\+R}}
+\index{M\+O\+D\+E\+\_\+\+R\+E\+G\+U\+L\+A\+R@{M\+O\+D\+E\+\_\+\+R\+E\+G\+U\+L\+A\+R}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{M\+O\+D\+E\+\_\+\+R\+E\+G\+U\+L\+A\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+O\+D\+E\+\_\+\+R\+E\+G\+U\+L\+A\+R~0x4}\label{main_8cpp_a3cfff774e983fd021cd6b50b3e8e867a}
+\hypertarget{main_8cpp_a256a5721249aa3309437212cc21a9fe4}{}\index{main.\+cpp@{main.\+cpp}!P\+A\+T\+H\+\_\+\+S\+E\+P\+A\+R\+A\+T\+O\+R@{P\+A\+T\+H\+\_\+\+S\+E\+P\+A\+R\+A\+T\+O\+R}}
+\index{P\+A\+T\+H\+\_\+\+S\+E\+P\+A\+R\+A\+T\+O\+R@{P\+A\+T\+H\+\_\+\+S\+E\+P\+A\+R\+A\+T\+O\+R}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{P\+A\+T\+H\+\_\+\+S\+E\+P\+A\+R\+A\+T\+O\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+T\+H\+\_\+\+S\+E\+P\+A\+R\+A\+T\+O\+R~\char`\"{}/\char`\"{}}\label{main_8cpp_a256a5721249aa3309437212cc21a9fe4}
+
+
+\subsection{Function Documentation}
+\hypertarget{main_8cpp_a7cec9f4f9ebd175d0659ca6af28407a5}{}\index{main.\+cpp@{main.\+cpp}!exists\+\_\+file@{exists\+\_\+file}}
+\index{exists\+\_\+file@{exists\+\_\+file}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{exists\+\_\+file}]{\setlength{\rightskip}{0pt plus 5cm}bool exists\+\_\+file (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{main_8cpp_a7cec9f4f9ebd175d0659ca6af28407a5}
+checks if file exists by using C++ S\+T\+L fstream functions
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & path to file to check for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if file exists, false otherwise 
+\end{DoxyReturn}
+\hypertarget{main_8cpp_a0fd3296629ea14da96a5b0aedd4193c3}{}\index{main.\+cpp@{main.\+cpp}!generate\+\_\+graphml@{generate\+\_\+graphml}}
+\index{generate\+\_\+graphml@{generate\+\_\+graphml}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{generate\+\_\+graphml}]{\setlength{\rightskip}{0pt plus 5cm}bool generate\+\_\+graphml (
+\begin{DoxyParamCaption}
+\item[{const bool}]{verbose, }
+\item[{{\bf Ran\+Gen\+File} \&}]{file, }
+\item[{const char $\ast$}]{ofilename, }
+\item[{const bool}]{dummynodes = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_a0fd3296629ea14da96a5b0aedd4193c3}
+generates for given \hyperlink{class_ran_gen_file}{Ran\+Gen\+File} graphml output for use i.\+e. in Ge\+Phi. Graph\+M\+L output contains node and edge struture labeling nodes/edges n0, n1, .../ e0, e2, ... . Note that labels start only with 0 iff dummynodes are selected. Furthermore, duration, release, deadline and time between deadline and release are written to the Graph\+M\+L file.
+
+
+\begin{DoxyParams}{Parameters}
+{\em verbose} & set to true if messages shall be displayed \\
+\hline
+{\em file} & reference to \hyperlink{class_ran_gen_file}{Ran\+Gen\+File} for which contents shall be written to Graph\+M\+L \\
+\hline
+{\em ofilename} & path to file to write to \\
+\hline
+{\em dummynodes} & set to true to output dummynodes at start and end of graph (default false) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+returns true if no errors occured 
+\end{DoxyReturn}
+\hypertarget{main_8cpp_a50f37e5a6eb9900fdb5c5657c18d5883}{}\index{main.\+cpp@{main.\+cpp}!generate\+\_\+output@{generate\+\_\+output}}
+\index{generate\+\_\+output@{generate\+\_\+output}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{generate\+\_\+output}]{\setlength{\rightskip}{0pt plus 5cm}bool generate\+\_\+output (
+\begin{DoxyParamCaption}
+\item[{const bool}]{verbose, }
+\item[{const char $\ast$}]{ifilename, }
+\item[{const char $\ast$}]{ofilename, }
+\item[{const int}]{time\+\_\+limit, }
+\item[{const bool}]{dummynodes = {\ttfamily false}, }
+\item[{const bool}]{graphml = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_a50f37e5a6eb9900fdb5c5657c18d5883}
+parses file in Patterson format first, generates then additional times and outputs then data in the structure used by the Kis / Alfieri models\textquotesingle{} implementations and if desired an additional Graph\+M\+L file to investigate the network structure. Performs furthermore automatic checks whether given input is a D\+A\+G(directed acyclic graph).
+
+
+\begin{DoxyParams}{Parameters}
+{\em verbose} & set to true to display additional messages \\
+\hline
+{\em ifilename} & path to input file \\
+\hline
+{\em ofilename} & path to output file \\
+\hline
+{\em time\+\_\+limit} & controls the maximum deviation release and deadlines can have. Higher values lead to greater time horizon. Default is 10. \\
+\hline
+{\em dummynodes} & set to true to ouput dummy nodes at start and end \\
+\hline
+{\em graphml} & set to true to output additional graphml file to ofilename.\+graphml \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if no errors occured 
+\end{DoxyReturn}
+\hypertarget{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{}\index{main.\+cpp@{main.\+cpp}!main@{main}}
+\index{main@{main}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97}
+contains main loop
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & number of arguments passed via commandline \\
+\hline
+{\em argv} & arguments passed to commandline. Note that argv\mbox{[}0\mbox{]} contains the name of the executable\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if no errors occured. 
+\end{DoxyReturn}
+\hypertarget{main_8cpp_a0f6f70ca2e3cf9ba956354b025dbac05}{}\index{main.\+cpp@{main.\+cpp}!print\+\_\+usage@{print\+\_\+usage}}
+\index{print\+\_\+usage@{print\+\_\+usage}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{print\+\_\+usage}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+usage (
+\begin{DoxyParamCaption}
+\item[{F\+I\+L\+E $\ast$}]{stream, }
+\item[{int}]{exit\+\_\+code}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_a0f6f70ca2e3cf9ba956354b025dbac05}
+displays all short and long options of the converter. Note that the syntax to use the converter requires to specify first all options and two files (input, output) except if the check mode is used (-\/c file)
+
+
+\begin{DoxyParams}{Parameters}
+{\em stream} & where to output the usage \\
+\hline
+{\em exit\+\_\+code} & exit code with which the program shall finished after usage has been printed \\
+\hline
+\end{DoxyParams}
+\hypertarget{main_8cpp_a273902d18eb17be4eb9040ee099ad9f1}{}\index{main.\+cpp@{main.\+cpp}!writable\+\_\+file@{writable\+\_\+file}}
+\index{writable\+\_\+file@{writable\+\_\+file}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{writable\+\_\+file}]{\setlength{\rightskip}{0pt plus 5cm}bool writable\+\_\+file (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{main_8cpp_a273902d18eb17be4eb9040ee099ad9f1}
+checks if program is exceuted with permission to write to disk.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & path to check for writing permission \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if converter could write to given path (name), false otherwise 
+\end{DoxyReturn}
+
+
+\subsection{Variable Documentation}
+\hypertarget{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}{}\index{main.\+cpp@{main.\+cpp}!long\+\_\+options@{long\+\_\+options}}
+\index{long\+\_\+options@{long\+\_\+options}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{long\+\_\+options}]{\setlength{\rightskip}{0pt plus 5cm}const struct {\bf option} long\+\_\+options\mbox{[}$\,$\mbox{]}}\label{main_8cpp_ab5dbce71205dc2c81b813a55379f9400}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    \{\textcolor{stringliteral}{"help"}, 0, NULL, \textcolor{charliteral}{'h'}\},
+    \{\textcolor{stringliteral}{"check-input"}, 1, NULL, \textcolor{charliteral}{'c'}\},
+    \{\textcolor{stringliteral}{"verbose"}, 0, NULL, \textcolor{charliteral}{'v'}\},
+    \{\textcolor{stringliteral}{"graphml"}, 0, NULL, \textcolor{charliteral}{'g'}\},
+    \{\textcolor{stringliteral}{"dummy"}, 0, NULL, \textcolor{charliteral}{'d'}\},
+    \{ \textcolor{stringliteral}{"timelimit"}, 1, NULL, \textcolor{charliteral}{'t'} \},
+    \{NULL, 0, NULL, 0\}
+\}
+\end{DoxyCode}
+\hypertarget{main_8cpp_ad415aa777d9477e7aaa696e53f36491a}{}\index{main.\+cpp@{main.\+cpp}!program\+\_\+name@{program\+\_\+name}}
+\index{program\+\_\+name@{program\+\_\+name}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{program\+\_\+name}]{\setlength{\rightskip}{0pt plus 5cm}string program\+\_\+name}\label{main_8cpp_ad415aa777d9477e7aaa696e53f36491a}
+\hypertarget{main_8cpp_adeeb19e806939f82914ee4867ea11bab}{}\index{main.\+cpp@{main.\+cpp}!short\+\_\+options@{short\+\_\+options}}
+\index{short\+\_\+options@{short\+\_\+options}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{short\+\_\+options}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ const short\+\_\+options = \char`\"{}hc\+:vgdt\+:\char`\"{}}\label{main_8cpp_adeeb19e806939f82914ee4867ea11bab}

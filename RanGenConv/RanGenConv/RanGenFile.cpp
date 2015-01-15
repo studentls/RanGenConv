@@ -17,8 +17,14 @@ RanGenFile::~RanGenFile() {
     
 }
 
-
-// function to parse a rangenfile
+/**
+ * @brief function to parse a rangenfile
+ * @details function to parse a rangenfile given in Patterson format. If problems occur, make sure to use a suitable file encoding(i.e. ASCII)
+ * 
+ * @param filename path to file to parse
+ * @return true if no errors occured
+ */
+// 
 bool RanGenFile::parse_file(std::string filename) {
     using namespace std;
     
@@ -138,7 +144,13 @@ bool RanGenFile::build_adjmatrix(const std::vector<node>& V) {
        return res;
        }
        
-// new advanced algorithm
+/**
+ * @brief generates release and deadlines
+ * @details generates release and deadlines w.r.t. to constraints.
+ * 
+ * @param limit time limit used for generation of release/deadlines. Higher time_limit will cause a higher time horizon due to deadlines and release times more away from each other.
+ * @return true if no errors occured
+ */
 bool RanGenFile::generate_times(const int limit = 10) {
    
     using namespace std;
@@ -226,21 +238,24 @@ bool RanGenFile::generate_times(const int limit = 10) {
        if (Y < X) {
            cout << "something is wrong here" << endl;
        }
-#ifdef DEBUG
+
        assert(p_max >= 0);
        assert(r_max >= 0);
        assert(d_max >= 0);
        assert(X >= p_max);
        assert(Y >= X);
        assert(G.v(j).deadline - G.v(j).release >= G.v(j).activity_duration);
-#endif
+
    }
    
     return true;
 }
 
-// validate generated times
-// returns true if no error occured
+/**
+ * @brief validates generated times by checking constraints.
+ * @details validates generated times using a topological sort w.r.t. given constraints. Outputs furhtmerore each occurence
+ * @return true if genereated times do not violate constraints
+ */
 bool RanGenFile::validate_times() {
     using namespace std;
     
@@ -293,8 +308,13 @@ bool RanGenFile::validate_times() {
     return res;
 }
 
-// function in order to validate if given input follows RanGen format
-// returns false if problems occured
+/**
+ * @brief validates parsed data of a Patterson file
+ * @details function in order to validate Patterson file by checking if given input follows RanGen format and data parsed is consistent
+ * 
+ * @param verbose output verbose messages
+ * @return true if file passed all tetst, false for any errors
+ */
 bool RanGenFile::validate_file(const bool verbose) {
     using namespace std;
     

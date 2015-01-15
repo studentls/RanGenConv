@@ -1,0 +1,249 @@
+\hypertarget{class_graph}{}\section{Graph$<$ T $>$ Class Template Reference}
+\label{class_graph}\index{Graph$<$ T $>$@{Graph$<$ T $>$}}
+
+
+handles storage of graph structure and assigned data to nodes  
+
+
+
+
+{\ttfamily \#include $<$Graph.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_graph_a8c626ac04708ae490bba05e1e713cda2}{Graph} ()
+\item 
+\hyperlink{class_graph_a43eab1460b5c8ceaa526b40e56a0fb0c}{$\sim$\+Graph} ()
+\item 
+bool \hyperlink{class_graph_aecf48f45702b87cdef1c9ee1dd716267}{init} (const unsigned int \hyperlink{class_graph_a97fdbb2378f3a15690156075f6218d23}{vertex\+\_\+count})
+\begin{DoxyCompactList}\small\item\em reserves space to store vertex\+\_\+count vertices with data \end{DoxyCompactList}\item 
+bool \hyperlink{class_graph_a6afccd07424a50a65be20c55e0535c0f}{is\+Cyclic} ()
+\begin{DoxyCompactList}\small\item\em checks if graph is cyclic \end{DoxyCompactList}\item 
+void \hyperlink{class_graph_a7ea10477bee41a1d2059cde0b45e976c}{topological\+Sort} (std\+::stack$<$ int $>$ \&Stack)
+\begin{DoxyCompactList}\small\item\em performs a topological sort and outputs result on a stack \end{DoxyCompactList}\item 
+T \& \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v} (const int v)
+\begin{DoxyCompactList}\small\item\em returns refernece to node data for vertex \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v} \end{DoxyCompactList}\item 
+void \hyperlink{class_graph_a7a7fc33fa15f538eb03bd3fb8671b884}{set\+\_\+vertex} (const int \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v}, const T \&val)
+\begin{DoxyCompactList}\small\item\em sets node data for vertex \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v} \end{DoxyCompactList}\item 
+void \hyperlink{class_graph_a363c8fad867566c72b6c597684d06cba}{set} (const int i, const int j, const unsigned char val)
+\begin{DoxyCompactList}\small\item\em adds or removes edge $<$i, j$>$ to edge set \end{DoxyCompactList}\item 
+unsigned char \hyperlink{class_graph_a1bb6a20381e0c6aa3f3aa27751bd04e1}{get} (const int i, const int j)
+\begin{DoxyCompactList}\small\item\em returns whether edge belongs to edge set or not \end{DoxyCompactList}\item 
+unsigned int \hyperlink{class_graph_a97fdbb2378f3a15690156075f6218d23}{vertex\+\_\+count} ()
+\begin{DoxyCompactList}\small\item\em returns information on number of vertices of graph \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{class_graph_aea4c7543daf12aaf2d06bc15d6306699}{valid\+Index} (int i)
+\item 
+bool \hyperlink{class_graph_a22f49353a2e338d35d2c9c49f6d1f36a}{is\+Cyclic\+Util} (int \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v}, bool $\ast$visited, bool $\ast$rec\+Stack)
+\item 
+void \hyperlink{class_graph_addec6cf734d8cab1f579e806cd5855da}{topolocial\+Sort\+Util} (const int \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v}, bool $\ast$visited, std\+::stack$<$ int $>$ \&Stack)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+T $\ast$ \hyperlink{class_graph_a049cc274f3726e8b202f1fcf1145be80}{\+\_\+vertices}
+\item 
+unsigned int \hyperlink{class_graph_a4e7aab8b61dd4b59cc7e02f32cac0529}{\+\_\+vertex\+\_\+count}
+\item 
+\hyperlink{class_adjacencymatrix}{Adjacencymatrix} \hyperlink{class_graph_a3f1a8e4dff5fb8a85eb698095d48fe32}{\+\_\+m}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$class Graph$<$ T $>$}
+
+uses currently an adjacencymatrix for representation of edge structure, an adjancency list might be an alternative. Supports only data assigned to vertices. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & type of the data assigned to the individual nodes \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_graph_a8c626ac04708ae490bba05e1e713cda2}{}\index{Graph@{Graph}!Graph@{Graph}}
+\index{Graph@{Graph}!Graph@{Graph}}
+\subsubsection[{Graph}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ {\bf Graph}$<$ T $>$\+::{\bf Graph} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_a8c626ac04708ae490bba05e1e713cda2}
+\hypertarget{class_graph_a43eab1460b5c8ceaa526b40e56a0fb0c}{}\index{Graph@{Graph}!````~Graph@{$\sim$\+Graph}}
+\index{````~Graph@{$\sim$\+Graph}!Graph@{Graph}}
+\subsubsection[{$\sim$\+Graph}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ {\bf Graph}$<$ T $>$\+::$\sim${\bf Graph} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_a43eab1460b5c8ceaa526b40e56a0fb0c}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_graph_a1bb6a20381e0c6aa3f3aa27751bd04e1}{}\index{Graph@{Graph}!get@{get}}
+\index{get@{get}!Graph@{Graph}}
+\subsubsection[{get}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ unsigned char {\bf Graph}$<$ T $>$\+::get (
+\begin{DoxyParamCaption}
+\item[{const int}]{i, }
+\item[{const int}]{j}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_a1bb6a20381e0c6aa3f3aa27751bd04e1}
+whether edge belongs to edge set or not. Positive values indicate edge belongs to edge set.
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & predecessor \\
+\hline
+{\em j} & successor\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+positive values mean edge belongs to edge set, 0 otherwise not. 
+\end{DoxyReturn}
+\hypertarget{class_graph_aecf48f45702b87cdef1c9ee1dd716267}{}\index{Graph@{Graph}!init@{init}}
+\index{init@{init}!Graph@{Graph}}
+\subsubsection[{init}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ bool {\bf Graph}$<$ T $>$\+::init (
+\begin{DoxyParamCaption}
+\item[{const unsigned int}]{vertex\+\_\+count}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_aecf48f45702b87cdef1c9ee1dd716267}
+reserves space to store vertex\+\_\+count vertices with data. If called more than one time for the same \hyperlink{class_graph}{Graph} object, existing data will be deleted and the object be reset
+
+
+\begin{DoxyParams}{Parameters}
+{\em int} & \mbox{[}description\mbox{]} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}description\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_graph_a6afccd07424a50a65be20c55e0535c0f}{}\index{Graph@{Graph}!is\+Cyclic@{is\+Cyclic}}
+\index{is\+Cyclic@{is\+Cyclic}!Graph@{Graph}}
+\subsubsection[{is\+Cyclic}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ bool {\bf Graph}$<$ T $>$\+::is\+Cyclic (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_a6afccd07424a50a65be20c55e0535c0f}
+checks if graph is cyclic by performing a D\+F\+S (depth first search). For a D\+A\+G (directed acyclic graph) this function should return always false. \begin{DoxyReturn}{Returns}
+true if cycle was found, false otherwise. 
+\end{DoxyReturn}
+\hypertarget{class_graph_a22f49353a2e338d35d2c9c49f6d1f36a}{}\index{Graph@{Graph}!is\+Cyclic\+Util@{is\+Cyclic\+Util}}
+\index{is\+Cyclic\+Util@{is\+Cyclic\+Util}!Graph@{Graph}}
+\subsubsection[{is\+Cyclic\+Util}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ bool {\bf Graph}$<$ T $>$\+::is\+Cyclic\+Util (
+\begin{DoxyParamCaption}
+\item[{int}]{v, }
+\item[{bool $\ast$}]{visited, }
+\item[{bool $\ast$}]{rec\+Stack}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\label{class_graph_a22f49353a2e338d35d2c9c49f6d1f36a}
+\hypertarget{class_graph_a363c8fad867566c72b6c597684d06cba}{}\index{Graph@{Graph}!set@{set}}
+\index{set@{set}!Graph@{Graph}}
+\subsubsection[{set}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ void {\bf Graph}$<$ T $>$\+::set (
+\begin{DoxyParamCaption}
+\item[{const int}]{i, }
+\item[{const int}]{j, }
+\item[{const unsigned char}]{val}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_a363c8fad867566c72b6c597684d06cba}
+adds or removes edge $<$i, j$>$ to edge set. Note that indices start with 0. I.\+e. valid values for i, j are 0,...,vertex\+\_\+count-\/1
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & predecessor \\
+\hline
+{\em j} & successor \\
+\hline
+{\em val} & positive value will add the edge $<$i, j$>$ to the edge set, 0 remove. \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_graph_a7a7fc33fa15f538eb03bd3fb8671b884}{}\index{Graph@{Graph}!set\+\_\+vertex@{set\+\_\+vertex}}
+\index{set\+\_\+vertex@{set\+\_\+vertex}!Graph@{Graph}}
+\subsubsection[{set\+\_\+vertex}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ void {\bf Graph}$<$ T $>$\+::set\+\_\+vertex (
+\begin{DoxyParamCaption}
+\item[{const int}]{v, }
+\item[{const T \&}]{val}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_a7a7fc33fa15f538eb03bd3fb8671b884}
+sets node data for vertex \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & index of node to set data for \\
+\hline
+{\em val} & node data to set for node \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_graph_addec6cf734d8cab1f579e806cd5855da}{}\index{Graph@{Graph}!topolocial\+Sort\+Util@{topolocial\+Sort\+Util}}
+\index{topolocial\+Sort\+Util@{topolocial\+Sort\+Util}!Graph@{Graph}}
+\subsubsection[{topolocial\+Sort\+Util}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ void {\bf Graph}$<$ T $>$\+::topolocial\+Sort\+Util (
+\begin{DoxyParamCaption}
+\item[{const int}]{v, }
+\item[{bool $\ast$}]{visited, }
+\item[{std\+::stack$<$ int $>$ \&}]{Stack}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\label{class_graph_addec6cf734d8cab1f579e806cd5855da}
+\hypertarget{class_graph_a7ea10477bee41a1d2059cde0b45e976c}{}\index{Graph@{Graph}!topological\+Sort@{topological\+Sort}}
+\index{topological\+Sort@{topological\+Sort}!Graph@{Graph}}
+\subsubsection[{topological\+Sort}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ void {\bf Graph}$<$ T $>$\+::topological\+Sort (
+\begin{DoxyParamCaption}
+\item[{std\+::stack$<$ int $>$ \&}]{Stack}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_a7ea10477bee41a1d2059cde0b45e976c}
+performs a topological sort and outputs result on a stack using a D\+F\+S (depth first search).
+
+
+\begin{DoxyParams}{Parameters}
+{\em Stack} & C++ S\+T\+L stack to write order of topological sort. I.\+e. first/top entry equals the first node which shall be visited. \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{}\index{Graph@{Graph}!v@{v}}
+\index{v@{v}!Graph@{Graph}}
+\subsubsection[{v}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ T\& {\bf Graph}$<$ T $>$\+::v (
+\begin{DoxyParamCaption}
+\item[{const int}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_ab2853dc3f4d1684e69319b35952f5b77}
+returns refernece to node data for vertex \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v}. Note that this function provides read/write access! Be careful using this reference.
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & index of node to return data for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+node data of vertex \hyperlink{class_graph_ab2853dc3f4d1684e69319b35952f5b77}{v} 
+\end{DoxyReturn}
+\hypertarget{class_graph_aea4c7543daf12aaf2d06bc15d6306699}{}\index{Graph@{Graph}!valid\+Index@{valid\+Index}}
+\index{valid\+Index@{valid\+Index}!Graph@{Graph}}
+\subsubsection[{valid\+Index}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ bool {\bf Graph}$<$ T $>$\+::valid\+Index (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\label{class_graph_aea4c7543daf12aaf2d06bc15d6306699}
+\hypertarget{class_graph_a97fdbb2378f3a15690156075f6218d23}{}\index{Graph@{Graph}!vertex\+\_\+count@{vertex\+\_\+count}}
+\index{vertex\+\_\+count@{vertex\+\_\+count}!Graph@{Graph}}
+\subsubsection[{vertex\+\_\+count}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ unsigned int {\bf Graph}$<$ T $>$\+::vertex\+\_\+count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{class_graph_a97fdbb2378f3a15690156075f6218d23}
+\begin{DoxyReturn}{Returns}
+number of nodes, vertices respectively of the graph 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{class_graph_a3f1a8e4dff5fb8a85eb698095d48fe32}{}\index{Graph@{Graph}!\+\_\+m@{\+\_\+m}}
+\index{\+\_\+m@{\+\_\+m}!Graph@{Graph}}
+\subsubsection[{\+\_\+m}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ {\bf Adjacencymatrix} {\bf Graph}$<$ T $>$\+::\+\_\+m\hspace{0.3cm}{\ttfamily [private]}}\label{class_graph_a3f1a8e4dff5fb8a85eb698095d48fe32}
+\hypertarget{class_graph_a4e7aab8b61dd4b59cc7e02f32cac0529}{}\index{Graph@{Graph}!\+\_\+vertex\+\_\+count@{\+\_\+vertex\+\_\+count}}
+\index{\+\_\+vertex\+\_\+count@{\+\_\+vertex\+\_\+count}!Graph@{Graph}}
+\subsubsection[{\+\_\+vertex\+\_\+count}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ unsigned int {\bf Graph}$<$ T $>$\+::\+\_\+vertex\+\_\+count\hspace{0.3cm}{\ttfamily [private]}}\label{class_graph_a4e7aab8b61dd4b59cc7e02f32cac0529}
+\hypertarget{class_graph_a049cc274f3726e8b202f1fcf1145be80}{}\index{Graph@{Graph}!\+\_\+vertices@{\+\_\+vertices}}
+\index{\+\_\+vertices@{\+\_\+vertices}!Graph@{Graph}}
+\subsubsection[{\+\_\+vertices}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T$>$ T$\ast$ {\bf Graph}$<$ T $>$\+::\+\_\+vertices\hspace{0.3cm}{\ttfamily [private]}}\label{class_graph_a049cc274f3726e8b202f1fcf1145be80}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_graph_8h}{Graph.\+h}\end{DoxyCompactItemize}
